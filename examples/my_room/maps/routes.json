@@ -1,0 +1,750 @@
+{
+ "grid": {
+  "x0": -0.4000000059604645,
+  "y0": -0.4000000059604645,
+  "nx": 88,
+  "ny": 66,
+  "res": 0.05
+ },
+ "robots": {
+  "humanoid": {
+   "profile": {
+    "name": "humanoid",
+    "radius": 0.25,
+    "height": 1.8,
+    "camera_height": 1.6,
+    "step": 0.12,
+    "label": "humanoid (\u00d8 0.5 m, 1.8 m tall)"
+   },
+   "start": [
+    0.775,
+    2.025
+   ],
+   "start_from": "the door",
+   "inspect_changes": {
+    "check_C1_office_chair": {
+     "reachable": true,
+     "goal": [
+      1.7749999940395358,
+      0.8249999940395356
+     ],
+     "yaw_deg": -0.2
+    },
+    "check_C2_suitcase": {
+     "reachable": true,
+     "goal": [
+      0.7749999940395356,
+      2.024999994039536
+     ],
+     "yaw_deg": 19.6
+    },
+    "check_C3_backpack": {
+     "reachable": true,
+     "goal": [
+      0.7749999940395356,
+      2.024999994039536
+     ],
+     "yaw_deg": -18.9
+    }
+   },
+   "reachable_area_m2": {
+    "before": 0.96,
+    "updated": 1.1
+   },
+   "routes": [
+    {
+     "goal": "bed",
+     "status": "unchanged",
+     "before_m": 0.1,
+     "updated_m": 0.1,
+     "causes": [],
+     "goal_moved_m": 0.0
+    },
+    {
+     "goal": "wardrobe",
+     "status": "unchanged",
+     "before_m": 1.0,
+     "updated_m": 1.07,
+     "causes": [],
+     "goal_moved_m": 0.0,
+     "old_route_clearance_m": 0.22,
+     "old_route_hits": [
+      "C3"
+     ]
+    },
+    {
+     "goal": "radiator",
+     "status": "unchanged",
+     "before_m": 0.1,
+     "updated_m": 0.1,
+     "causes": [],
+     "goal_moved_m": 0.0
+    },
+    {
+     "goal": "desk",
+     "status": "unchanged",
+     "before_m": 0.85,
+     "updated_m": 0.85,
+     "causes": [],
+     "goal_moved_m": 0.0
+    },
+    {
+     "goal": "window",
+     "status": "unchanged",
+     "before_m": 0.4,
+     "updated_m": 0.4,
+     "causes": [],
+     "goal_moved_m": 0.0
+    },
+    {
+     "goal": "nightstand",
+     "status": "unreachable",
+     "before_m": null,
+     "updated_m": null,
+     "causes": []
+    }
+   ],
+   "edits": {
+    "vacated_m2": 0.28,
+    "new_obstacle_m2": 0.37,
+    "now_unknown_m2": 0.01,
+    "cells_changed_by_edits_m2": 0.65,
+    "cells_changed_by_remapping_m2": 1.39,
+    "remapping_changes_where_both_known_m2": 0.77
+   },
+   "plans": {
+    "before": {
+     "bed": {
+      "reachable": true,
+      "landmark": "bed",
+      "goal": [
+       0.8749999940395357,
+       2.024999994039536
+      ],
+      "yaw_deg": 0.0,
+      "waypoints": [
+       [
+        0.775,
+        2.025
+       ],
+       [
+        0.875,
+        2.025
+       ]
+      ],
+      "length_m": 0.1,
+      "min_clearance_m": 0.25
+     },
+     "wardrobe": {
+      "reachable": true,
+      "landmark": "wardrobe",
+      "goal": [
+       1.3749999940395357,
+       1.2249999940395355
+      ],
+      "yaw_deg": -54.0,
+      "waypoints": [
+       [
+        0.775,
+        2.025
+       ],
+       [
+        1.375,
+        1.225
+       ]
+      ],
+      "length_m": 1.0,
+      "min_clearance_m": 0.25
+     },
+     "radiator": {
+      "reachable": true,
+      "landmark": "radiator",
+      "goal": [
+       0.7749999940395356,
+       1.9249999940395357
+      ],
+      "yaw_deg": -90.0,
+      "waypoints": [
+       [
+        0.775,
+        2.025
+       ],
+       [
+        0.775,
+        1.925
+       ]
+      ],
+      "length_m": 0.1,
+      "min_clearance_m": 0.25
+     },
+     "desk": {
+      "reachable": true,
+      "landmark": "desk",
+      "goal": [
+       0.7749999940395356,
+       1.1749999940395357
+      ],
+      "yaw_deg": -72.9,
+      "waypoints": [
+       [
+        0.775,
+        2.025
+       ],
+       [
+        0.775,
+        1.175
+       ]
+      ],
+      "length_m": 0.85,
+      "min_clearance_m": 0.25
+     },
+     "window": {
+      "reachable": true,
+      "landmark": "window",
+      "goal": [
+       0.5749999940395356,
+       1.6749999940395357
+      ],
+      "yaw_deg": -120.3,
+      "waypoints": [
+       [
+        0.775,
+        2.025
+       ],
+       [
+        0.575,
+        1.675
+       ]
+      ],
+      "length_m": 0.4,
+      "min_clearance_m": 0.25
+     },
+     "nightstand": {
+      "reachable": false,
+      "landmark": "nightstand"
+     }
+    },
+    "updated": {
+     "bed": {
+      "reachable": true,
+      "landmark": "bed",
+      "goal": [
+       0.8749999940395357,
+       2.024999994039536
+      ],
+      "yaw_deg": 0.0,
+      "waypoints": [
+       [
+        0.775,
+        2.025
+       ],
+       [
+        0.875,
+        2.025
+       ]
+      ],
+      "length_m": 0.1,
+      "min_clearance_m": 0.25
+     },
+     "wardrobe": {
+      "reachable": true,
+      "landmark": "wardrobe",
+      "goal": [
+       1.3749999940395357,
+       1.2249999940395355
+      ],
+      "yaw_deg": -54.0,
+      "waypoints": [
+       [
+        0.775,
+        2.025
+       ],
+       [
+        1.225,
+        1.225
+       ],
+       [
+        1.375,
+        1.225
+       ]
+      ],
+      "length_m": 1.07,
+      "min_clearance_m": 0.25
+     },
+     "radiator": {
+      "reachable": true,
+      "landmark": "radiator",
+      "goal": [
+       0.7749999940395356,
+       1.9249999940395357
+      ],
+      "yaw_deg": -90.0,
+      "waypoints": [
+       [
+        0.775,
+        2.025
+       ],
+       [
+        0.775,
+        1.925
+       ]
+      ],
+      "length_m": 0.1,
+      "min_clearance_m": 0.25
+     },
+     "desk": {
+      "reachable": true,
+      "landmark": "desk",
+      "goal": [
+       0.7749999940395356,
+       1.1749999940395357
+      ],
+      "yaw_deg": -72.9,
+      "waypoints": [
+       [
+        0.775,
+        2.025
+       ],
+       [
+        0.775,
+        1.175
+       ]
+      ],
+      "length_m": 0.85,
+      "min_clearance_m": 0.25
+     },
+     "window": {
+      "reachable": true,
+      "landmark": "window",
+      "goal": [
+       0.5749999940395356,
+       1.6749999940395357
+      ],
+      "yaw_deg": -120.3,
+      "waypoints": [
+       [
+        0.775,
+        2.025
+       ],
+       [
+        0.575,
+        1.675
+       ]
+      ],
+      "length_m": 0.4,
+      "min_clearance_m": 0.25
+     },
+     "nightstand": {
+      "reachable": false,
+      "landmark": "nightstand"
+     }
+    }
+   }
+  },
+  "compact": {
+   "profile": {
+    "name": "compact",
+    "radius": 0.2,
+    "height": 0.5,
+    "camera_height": 0.4,
+    "step": 0.12,
+    "label": "compact robot (\u00d8 0.4 m, 0.5 m tall)"
+   },
+   "start": [
+    0.575,
+    2.125
+   ],
+   "start_from": "the door",
+   "inspect_changes": {
+    "check_C1_office_chair": {
+     "reachable": true,
+     "goal": [
+      1.8249999940395356,
+      0.8249999940395356
+     ],
+     "yaw_deg": -0.2
+    },
+    "check_C2_suitcase": {
+     "reachable": true,
+     "goal": [
+      0.6249999940395357,
+      2.124999994039536
+     ],
+     "yaw_deg": 6.1
+    },
+    "check_C3_backpack": {
+     "reachable": true,
+     "goal": [
+      0.8249999940395356,
+      2.0749999940395356
+     ],
+     "yaw_deg": -24.5
+    }
+   },
+   "reachable_area_m2": {
+    "before": 1.43,
+    "updated": 1.53
+   },
+   "routes": [
+    {
+     "goal": "bed",
+     "status": "unchanged",
+     "before_m": 0.39,
+     "updated_m": 0.39,
+     "causes": [],
+     "goal_moved_m": 0.0
+    },
+    {
+     "goal": "wardrobe",
+     "status": "unchanged",
+     "before_m": 1.24,
+     "updated_m": 1.24,
+     "causes": [],
+     "goal_moved_m": 0.0
+    },
+    {
+     "goal": "radiator",
+     "status": "unchanged",
+     "before_m": 0.25,
+     "updated_m": 0.25,
+     "causes": [],
+     "goal_moved_m": 0.0
+    },
+    {
+     "goal": "desk",
+     "status": "unchanged",
+     "before_m": 1.02,
+     "updated_m": 1.02,
+     "causes": [],
+     "goal_moved_m": 0.0
+    },
+    {
+     "goal": "window",
+     "status": "unchanged",
+     "before_m": 0.46,
+     "updated_m": 0.46,
+     "causes": [],
+     "goal_moved_m": 0.0
+    },
+    {
+     "goal": "nightstand",
+     "status": "blocked",
+     "before_m": 2.48,
+     "updated_m": null,
+     "causes": [
+      "C1"
+     ],
+     "old_route_clearance_m": 0.0,
+     "old_route_hits": [
+      "C1"
+     ]
+    }
+   ],
+   "edits": {
+    "vacated_m2": 0.31,
+    "new_obstacle_m2": 0.43,
+    "now_unknown_m2": 0.01,
+    "cells_changed_by_edits_m2": 0.78,
+    "cells_changed_by_remapping_m2": 1.83,
+    "remapping_changes_where_both_known_m2": 0.91
+   },
+   "plans": {
+    "before": {
+     "bed": {
+      "reachable": true,
+      "landmark": "bed",
+      "goal": [
+       0.9249999940395357,
+       2.0749999940395356
+      ],
+      "yaw_deg": 0.0,
+      "waypoints": [
+       [
+        0.575,
+        2.125
+       ],
+       [
+        0.875,
+        2.025
+       ],
+       [
+        0.925,
+        2.075
+       ]
+      ],
+      "length_m": 0.39,
+      "min_clearance_m": 0.22
+     },
+     "wardrobe": {
+      "reachable": true,
+      "landmark": "wardrobe",
+      "goal": [
+       1.3749999940395357,
+       1.1749999940395357
+      ],
+      "yaw_deg": -51.3,
+      "waypoints": [
+       [
+        0.575,
+        2.125
+       ],
+       [
+        1.375,
+        1.175
+       ]
+      ],
+      "length_m": 1.24,
+      "min_clearance_m": 0.22
+     },
+     "radiator": {
+      "reachable": true,
+      "landmark": "radiator",
+      "goal": [
+       0.5749999940395356,
+       1.8749999940395354
+      ],
+      "yaw_deg": -90.0,
+      "waypoints": [
+       [
+        0.575,
+        2.125
+       ],
+       [
+        0.575,
+        1.875
+       ]
+      ],
+      "length_m": 0.25,
+      "min_clearance_m": 0.22
+     },
+     "desk": {
+      "reachable": true,
+      "landmark": "desk",
+      "goal": [
+       0.7749999940395356,
+       1.1249999940395357
+      ],
+      "yaw_deg": -71.6,
+      "waypoints": [
+       [
+        0.575,
+        2.125
+       ],
+       [
+        0.775,
+        1.125
+       ]
+      ],
+      "length_m": 1.02,
+      "min_clearance_m": 0.22
+     },
+     "window": {
+      "reachable": true,
+      "landmark": "window",
+      "goal": [
+       0.4749999940395355,
+       1.6749999940395357
+      ],
+      "yaw_deg": -112.6,
+      "waypoints": [
+       [
+        0.575,
+        2.125
+       ],
+       [
+        0.475,
+        1.675
+       ]
+      ],
+      "length_m": 0.46,
+      "min_clearance_m": 0.22
+     },
+     "nightstand": {
+      "reachable": true,
+      "landmark": "nightstand",
+      "goal": [
+       2.4749999940395355,
+       0.8249999940395356
+      ],
+      "yaw_deg": 0.0,
+      "waypoints": [
+       [
+        0.575,
+        2.125
+       ],
+       [
+        1.575,
+        0.925
+       ],
+       [
+        1.875,
+        0.825
+       ],
+       [
+        2.475,
+        0.825
+       ]
+      ],
+      "length_m": 2.48,
+      "min_clearance_m": 0.21
+     }
+    },
+    "updated": {
+     "bed": {
+      "reachable": true,
+      "landmark": "bed",
+      "goal": [
+       0.9249999940395357,
+       2.0749999940395356
+      ],
+      "yaw_deg": 0.0,
+      "waypoints": [
+       [
+        0.575,
+        2.125
+       ],
+       [
+        0.875,
+        2.025
+       ],
+       [
+        0.925,
+        2.075
+       ]
+      ],
+      "length_m": 0.39,
+      "min_clearance_m": 0.22
+     },
+     "wardrobe": {
+      "reachable": true,
+      "landmark": "wardrobe",
+      "goal": [
+       1.3749999940395357,
+       1.1749999940395357
+      ],
+      "yaw_deg": -51.3,
+      "waypoints": [
+       [
+        0.575,
+        2.125
+       ],
+       [
+        1.375,
+        1.175
+       ]
+      ],
+      "length_m": 1.24,
+      "min_clearance_m": 0.22
+     },
+     "radiator": {
+      "reachable": true,
+      "landmark": "radiator",
+      "goal": [
+       0.5749999940395356,
+       1.8749999940395354
+      ],
+      "yaw_deg": -90.0,
+      "waypoints": [
+       [
+        0.575,
+        2.125
+       ],
+       [
+        0.575,
+        1.875
+       ]
+      ],
+      "length_m": 0.25,
+      "min_clearance_m": 0.22
+     },
+     "desk": {
+      "reachable": true,
+      "landmark": "desk",
+      "goal": [
+       0.7749999940395356,
+       1.1249999940395357
+      ],
+      "yaw_deg": -71.6,
+      "waypoints": [
+       [
+        0.575,
+        2.125
+       ],
+       [
+        0.775,
+        1.125
+       ]
+      ],
+      "length_m": 1.02,
+      "min_clearance_m": 0.22
+     },
+     "window": {
+      "reachable": true,
+      "landmark": "window",
+      "goal": [
+       0.4749999940395355,
+       1.6749999940395357
+      ],
+      "yaw_deg": -112.6,
+      "waypoints": [
+       [
+        0.575,
+        2.125
+       ],
+       [
+        0.475,
+        1.675
+       ]
+      ],
+      "length_m": 0.46,
+      "min_clearance_m": 0.22
+     },
+     "nightstand": {
+      "reachable": false,
+      "landmark": "nightstand"
+     }
+    }
+   }
+  }
+ },
+ "frame": "room",
+ "files": [
+  "maps/humanoid_map_before.pgm",
+  "maps/humanoid_map_before.yaml",
+  "maps/humanoid_map_after.pgm",
+  "maps/humanoid_map_after.yaml",
+  "maps/humanoid_map_updated.pgm",
+  "maps/humanoid_map_updated.yaml",
+  "maps/humanoid_goals.yaml",
+  "maps/compact_map_before.pgm",
+  "maps/compact_map_before.yaml",
+  "maps/compact_map_after.pgm",
+  "maps/compact_map_after.yaml",
+  "maps/compact_map_updated.pgm",
+  "maps/compact_map_updated.yaml",
+  "maps/compact_goals.yaml"
+ ],
+ "sentences": {
+  "humanoid": [
+   "Yesterday's route to the wardrobe would pass within 0.22 m of the backpack, inside its 0.25 m radius.",
+   "Floor it can reach from the door: 0.96 m\u00b2 before, 1.10 m\u00b2 now."
+  ],
+  "compact": [
+   "The nightstand can no longer be reached: the office chair is in the way.",
+   "Yesterday's route to the nightstand would now run straight into the office chair.",
+   "Floor it can reach from the door: 1.43 m\u00b2 before, 1.53 m\u00b2 now."
+  ]
+ },
+ "occupancy3d": {
+  "free_m3": {
+   "before": 10.22,
+   "after": 9.89,
+   "updated": 10.25
+  },
+  "voxel": 0.045,
+  "files": [
+   "maps/occupancy3d.npz",
+   "maps/occupancy3d_occupied_updated.ply"
+  ]
+ }
+}

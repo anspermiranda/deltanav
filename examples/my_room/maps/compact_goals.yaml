@@ -1,0 +1,47 @@
+# goal poses for the compact robot (Ø 0.4 m, 0.5 m tall), in the room frame (= map frame of the exported maps)
+# yaw: radians, facing the furniture; quaternion about z for geometry_msgs/Pose
+frame_id: map
+poses:
+  - name: bed
+    x: 0.925
+    y: 2.075
+    yaw: 0.0000
+    orientation: {x: 0.0, y: 0.0, z: 0.0000, w: 1.0000}
+  - name: wardrobe
+    x: 1.375
+    y: 1.175
+    yaw: -0.8954
+    orientation: {x: 0.0, y: 0.0, z: -0.4329, w: 0.9015}
+  - name: radiator
+    x: 0.575
+    y: 1.875
+    yaw: -1.5708
+    orientation: {x: 0.0, y: 0.0, z: -0.7071, w: 0.7071}
+  - name: desk
+    x: 0.775
+    y: 1.125
+    yaw: -1.2497
+    orientation: {x: 0.0, y: 0.0, z: -0.5850, w: 0.8111}
+  - name: window
+    x: 0.475
+    y: 1.675
+    yaw: -1.9652
+    orientation: {x: 0.0, y: 0.0, z: -0.8320, w: 0.5548}
+  - name: check_C1_office_chair
+    x: 1.825
+    y: 0.825
+    yaw: -0.0035
+    orientation: {x: 0.0, y: 0.0, z: -0.0017, w: 1.0000}
+  - name: check_C2_suitcase
+    x: 0.625
+    y: 2.125
+    yaw: 0.1065
+    orientation: {x: 0.0, y: 0.0, z: 0.0532, w: 0.9986}
+  - name: check_C3_backpack
+    x: 0.825
+    y: 2.075
+    yaw: -0.4276
+    orientation: {x: 0.0, y: 0.0, z: -0.2122, w: 0.9772}
+start:
+  x: 0.575
+  y: 2.125

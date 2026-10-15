@@ -1,0 +1,107 @@
+[
+ {
+  "position": [
+   1.125,
+   2.025,
+   1.6
+  ],
+  "yaw_deg": 255.0,
+  "pitch_deg": -35.0,
+  "hfov_deg": 70.0,
+  "n_points": 761,
+  "score": 679.2,
+  "unknown_area_m2": 0.54,
+  "share_of_unknown": 0.127,
+  "looks_at": [
+   0.9359999895095825,
+   0.8100000023841858,
+   0.10199999809265137
+  ],
+  "looks_at_words": "between the bed and the radiator",
+  "robot": "humanoid"
+ },
+ {
+  "position": [
+   2.025,
+   0.825,
+   1.6
+  ],
+  "yaw_deg": 150.0,
+  "pitch_deg": -35.0,
+  "hfov_deg": 70.0,
+  "n_points": 781,
+  "score": 321.0,
+  "unknown_area_m2": 0.55,
+  "share_of_unknown": 0.13,
+  "looks_at": [
+   0.5649999976158142,
+   0.9959999918937683,
+   0.11500000208616257
+  ],
+  "looks_at_words": "between the desk and the window",
+  "robot": "humanoid"
+ },
+ {
+  "position": [
+   1.425,
+   1.125,
+   1.6
+  ],
+  "yaw_deg": 195.0,
+  "pitch_deg": -10.0,
+  "hfov_deg": 70.0,
+  "n_points": 907,
+  "score": 155.2,
+  "unknown_area_m2": 0.64,
+  "share_of_unknown": 0.151,
+  "looks_at": [
+   0.013000000268220901,
+   0.890999972820282,
+   1.5199999809265137
+  ],
+  "looks_at_words": "next to the window",
+  "robot": "humanoid"
+ },
+ {
+  "position": [
+   1.125,
+   2.025,
+   0.4
+  ],
+  "yaw_deg": 255.0,
+  "pitch_deg": -10.0,
+  "hfov_deg": 70.0,
+  "n_points": 683,
+  "score": 683.0,
+  "unknown_area_m2": 0.48,
+  "share_of_unknown": 0.114,
+  "looks_at": [
+   1.031000018119812,
+   0.7710000276565552,
+   0.0949999988079071
+  ],
+  "looks_at_words": "between the bed and the radiator",
+  "robot": "compact"
+ },
+ {
+  "position": [
+   0.525,
+   1.125,
+   0.4
+  ],
+  "yaw_deg": 45.0,
+  "pitch_deg": -10.0,
+  "hfov_deg": 70.0,
+  "n_points": 324,
+  "score": 267.0,
+  "unknown_area_m2": 0.23,
+  "share_of_unknown": 0.054,
+  "looks_at": [
+   0.9900000095367432,
+   2.063999891281128,
+   0.10899999737739563
+  ],
+  "looks_at_words": "at the foot of the bed",
+  "robot": "compact"
+ }
+]

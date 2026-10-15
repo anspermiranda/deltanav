@@ -1,0 +1,47 @@
+# goal poses for the humanoid (Ø 0.5 m, 1.8 m tall), in the room frame (= map frame of the exported maps)
+# yaw: radians, facing the furniture; quaternion about z for geometry_msgs/Pose
+frame_id: map
+poses:
+  - name: bed
+    x: 0.875
+    y: 2.025
+    yaw: 0.0000
+    orientation: {x: 0.0, y: 0.0, z: 0.0000, w: 1.0000}
+  - name: wardrobe
+    x: 1.375
+    y: 1.225
+    yaw: -0.9425
+    orientation: {x: 0.0, y: 0.0, z: -0.4540, w: 0.8910}
+  - name: radiator
+    x: 0.775
+    y: 1.925
+    yaw: -1.5708
+    orientation: {x: 0.0, y: 0.0, z: -0.7071, w: 0.7071}
+  - name: desk
+    x: 0.775
+    y: 1.175
+    yaw: -1.2723
+    orientation: {x: 0.0, y: 0.0, z: -0.5941, w: 0.8044}
+  - name: window
+    x: 0.575
+    y: 1.675
+    yaw: -2.0996
+    orientation: {x: 0.0, y: 0.0, z: -0.8673, w: 0.4977}
+  - name: check_C1_office_chair
+    x: 1.775
+    y: 0.825
+    yaw: -0.0035
+    orientation: {x: 0.0, y: 0.0, z: -0.0017, w: 1.0000}
+  - name: check_C2_suitcase
+    x: 0.775
+    y: 2.025
+    yaw: 0.3421
+    orientation: {x: 0.0, y: 0.0, z: 0.1702, w: 0.9854}
+  - name: check_C3_backpack
+    x: 0.775
+    y: 2.025
+    yaw: -0.3299
+    orientation: {x: 0.0, y: 0.0, z: -0.1642, w: 0.9864}
+start:
+  x: 0.775
+  y: 2.025

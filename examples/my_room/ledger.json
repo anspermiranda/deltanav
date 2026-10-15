@@ -1,0 +1,582 @@
+{
+ "frame": {
+  "name": "room",
+  "units": "metres, degrees",
+  "origin": "on the floor in a corner of the room (the corner with the smallest x and y)",
+  "x": "along one wall",
+  "y": "along the other wall (right-handed)",
+  "z": "up, measured from the fitted floor surface",
+  "yaw": "counter-clockwise about z, seen from above, 0 = +x",
+  "note": "the same frame as the maps (map frame), the meshes and the 3D views"
+ },
+ "changes": [
+  {
+   "id": "C1",
+   "type": "moved",
+   "label": "office chair",
+   "colour": "black",
+   "sentence": "The black office chair moved 1.4 m, from the desk to between the bed and the wardrobe, and turned about 55\u00b0.",
+   "before": {
+    "x": 1.309,
+    "y": 0.609,
+    "z": 0.413,
+    "sigma_m": 0.023,
+    "size_m": {
+     "length": 0.47,
+     "width": 0.36,
+     "height": 0.69
+    },
+    "footprint": {
+     "center": [
+      1.306,
+      0.587
+     ],
+     "size": [
+      0.357,
+      0.469
+     ],
+     "angle_deg": -89.8
+    },
+    "orientation_deg": 0.2,
+    "z_range": [
+     0.112,
+     0.69
+    ],
+    "relations": [
+     {
+      "relation": "at",
+      "target": "desk"
+     },
+     {
+      "relation": "on",
+      "target": "floor"
+     },
+     {
+      "relation": "near",
+      "target": "desk",
+      "distance_m": 0.08
+     },
+     {
+      "relation": "near",
+      "target": "wardrobe",
+      "distance_m": 0.47
+     }
+    ]
+   },
+   "after": {
+    "x": 2.647,
+    "y": 0.861,
+    "z": 0.435,
+    "sigma_m": 0.028,
+    "size_m": {
+     "length": 0.46,
+     "width": 0.43,
+     "height": 0.69
+    },
+    "footprint": {
+     "center": [
+      2.655,
+      0.861
+     ],
+     "size": [
+      0.43,
+      0.461
+     ],
+     "angle_deg": -0.2
+    },
+    "orientation_deg": 89.8,
+    "z_range": [
+     0.146,
+     0.69
+    ],
+    "relations": [
+     {
+      "relation": "between",
+      "target": "bed and wardrobe"
+     },
+     {
+      "relation": "on",
+      "target": "floor"
+     },
+     {
+      "relation": "near",
+      "target": "wardrobe",
+      "distance_m": 0.19
+     },
+     {
+      "relation": "near",
+      "target": "bed",
+      "distance_m": 0.21
+     }
+    ]
+   },
+   "delta": {
+    "dx": 1.338,
+    "dy": 0.252,
+    "dz": 0.022,
+    "distance_m": 1.361,
+    "distance_sigma_m": 0.036,
+    "rotation_deg": 57.4,
+    "rotation_source": "appearance (SIFT)",
+    "rotation_confident": true,
+    "transform_before_to_after": [
+     [
+      0.5388,
+      -0.8425,
+      0.0,
+      2.4541
+     ],
+     [
+      0.8425,
+      0.5388,
+      0.0,
+      -0.57
+     ],
+     [
+      0.0,
+      0.0,
+      1.0,
+      0.022
+     ],
+     [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+     ]
+    ],
+    "rotation_support": {
+     "inliers": 377,
+     "matches": 844
+    }
+   },
+   "evidence": {
+    "old_place": {
+     "views_looked": 60,
+     "views_saw_through": 59,
+     "views_saw_surface": 0,
+     "views_occluded": 0
+    },
+    "new_place": {
+     "views_looked": 65,
+     "views_saw_through": 64,
+     "views_saw_surface": 0,
+     "views_occluded": 0
+    }
+   },
+   "label_votes": {
+    "before": {
+     "office chair": 4.665
+    },
+    "after": {
+     "office chair": 3.525,
+     "chair": 1.542
+    }
+   },
+   "navigation": {
+    "humanoid": {
+     "obstacle": true,
+     "routes_affected": []
+    },
+    "compact": {
+     "obstacle": true,
+     "routes_affected": [
+      {
+       "goal": "nightstand",
+       "status": "blocked",
+       "before_m": 2.48,
+       "after_m": null,
+       "yesterdays_route_clearance_m": 0.0
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "C2",
+   "type": "removed",
+   "label": "suitcase",
+   "colour": "blue",
+   "sentence": "The blue suitcase at the foot of the bed, against the wall, is gone: 48 frames of the after video look straight through the space it filled.",
+   "before": {
+    "x": 1.427,
+    "y": 2.254,
+    "z": 0.408,
+    "sigma_m": 0.025,
+    "size_m": {
+     "length": 0.38,
+     "width": 0.17,
+     "height": 0.61
+    },
+    "footprint": {
+     "center": [
+      1.434,
+      2.276
+     ],
+     "size": [
+      0.383,
+      0.169
+     ],
+     "angle_deg": -0.0
+    },
+    "orientation_deg": 180.0,
+    "z_range": [
+     0.127,
+     0.612
+    ],
+    "relations": [
+     {
+      "relation": "at",
+      "target": "foot of bed, against wall"
+     },
+     {
+      "relation": "on",
+      "target": "floor"
+     },
+     {
+      "relation": "near",
+      "target": "bed",
+      "distance_m": 0.15
+     },
+     {
+      "relation": "near",
+      "target": "door",
+      "distance_m": 0.47
+     }
+    ]
+   },
+   "evidence": {
+    "place": {
+     "views_looked": 49,
+     "views_saw_through": 48,
+     "views_saw_surface": 1,
+     "views_occluded": 0
+    }
+   },
+   "label_votes": {
+    "suitcase": 4.391,
+    "backpack": 0.56
+   },
+   "navigation": {
+    "humanoid": {
+     "obstacle": null,
+     "routes_affected": []
+    },
+    "compact": {
+     "obstacle": null,
+     "routes_affected": []
+    }
+   }
+  },
+  {
+   "id": "C3",
+   "type": "added",
+   "label": "backpack",
+   "colour": "black",
+   "sentence": "A black backpack (0.47 m tall) appeared at the foot of the bed. It stands on the floor, so it is a new obstacle.",
+   "after": {
+    "x": 1.523,
+    "y": 1.623,
+    "z": 0.286,
+    "sigma_m": 0.021,
+    "size_m": {
+     "length": 0.34,
+     "width": 0.22,
+     "height": 0.47
+    },
+    "footprint": {
+     "center": [
+      1.524,
+      1.638
+     ],
+     "size": [
+      0.339,
+      0.221
+     ],
+     "angle_deg": -89.7
+    },
+    "orientation_deg": 90.3,
+    "z_range": [
+     0.115,
+     0.468
+    ],
+    "relations": [
+     {
+      "relation": "at",
+      "target": "foot of bed"
+     },
+     {
+      "relation": "on",
+      "target": "floor"
+     },
+     {
+      "relation": "near",
+      "target": "bed",
+      "distance_m": 0.05
+     },
+     {
+      "relation": "near",
+      "target": "radiator",
+      "distance_m": 0.8
+     }
+    ]
+   },
+   "evidence": {
+    "place": {
+     "views_looked": 41,
+     "views_saw_through": 23,
+     "views_saw_surface": 1,
+     "views_occluded": 15
+    }
+   },
+   "label_votes": {
+    "backpack": 5.516
+   },
+   "navigation": {
+    "humanoid": {
+     "obstacle": true,
+     "routes_affected": [
+      {
+       "goal": "wardrobe",
+       "status": "unchanged",
+       "before_m": 1.0,
+       "after_m": 1.07,
+       "yesterdays_route_clearance_m": 0.22
+      }
+     ]
+    },
+    "compact": {
+     "obstacle": true,
+     "routes_affected": []
+    }
+   }
+  }
+ ],
+ "furniture": [
+  {
+   "label": "bed",
+   "x": 2.575,
+   "y": 1.75,
+   "size_m": [
+    1.35,
+    2.0
+   ],
+   "angle_deg": -90.0,
+   "height_m": 0.8
+  },
+  {
+   "label": "wardrobe",
+   "x": 2.575,
+   "y": 0.425,
+   "size_m": [
+    0.5,
+    1.6
+   ],
+   "angle_deg": -90.0,
+   "height_m": 1.57
+  },
+  {
+   "label": "radiator",
+   "x": 0.45,
+   "y": 0.725,
+   "size_m": [
+    1.0,
+    0.75
+   ],
+   "angle_deg": -90.0,
+   "height_m": 0.703
+  },
+  {
+   "label": "desk",
+   "x": 1.7,
+   "y": 0.3,
+   "size_m": [
+    0.45,
+    1.45
+   ],
+   "angle_deg": -90.0,
+   "height_m": 0.689
+  },
+  {
+   "label": "window",
+   "x": 0.05,
+   "y": 0.675,
+   "size_m": [
+    0.8,
+    0.35
+   ],
+   "angle_deg": -90.0,
+   "height_m": 1.89
+  },
+  {
+   "label": "nightstand",
+   "x": 3.25,
+   "y": 0.975,
+   "size_m": [
+    0.4,
+    0.35
+   ],
+   "angle_deg": -90.0,
+   "height_m": 0.585
+  },
+  {
+   "label": "door",
+   "x": 0.55,
+   "y": 2.45,
+   "size_m": [
+    0.15,
+    0.85
+   ],
+   "angle_deg": -90.0,
+   "height_m": 1.824
+  }
+ ],
+ "could_not_check": {
+  "before": {
+   "points": 159812,
+   "same": 0.8604,
+   "gone": 0.023,
+   "unknown": 0.1166,
+   "unknown_self_inconsistent": 0.0736,
+   "unknown_never_in_view": 0.0064,
+   "unknown_occluded": 0.0268,
+   "unknown_too_few_views": 0.0099
+  },
+  "after": {
+   "points": 153327,
+   "same": 0.8513,
+   "gone": 0.0287,
+   "unknown": 0.1199,
+   "unknown_self_inconsistent": 0.0735,
+   "unknown_never_in_view": 0.0003,
+   "unknown_occluded": 0.0401,
+   "unknown_too_few_views": 0.0061
+  }
+ },
+ "rejected_candidates": [],
+ "next_views": [
+  {
+   "position": [
+    1.125,
+    2.025,
+    1.6
+   ],
+   "yaw_deg": 255.0,
+   "pitch_deg": -35.0,
+   "hfov_deg": 70.0,
+   "n_points": 761,
+   "score": 679.2,
+   "unknown_area_m2": 0.54,
+   "share_of_unknown": 0.127,
+   "looks_at": [
+    0.9359999895095825,
+    0.8100000023841858,
+    0.10199999809265137
+   ],
+   "looks_at_words": "between the bed and the radiator",
+   "robot": "humanoid"
+  },
+  {
+   "position": [
+    2.025,
+    0.825,
+    1.6
+   ],
+   "yaw_deg": 150.0,
+   "pitch_deg": -35.0,
+   "hfov_deg": 70.0,
+   "n_points": 781,
+   "score": 321.0,
+   "unknown_area_m2": 0.55,
+   "share_of_unknown": 0.13,
+   "looks_at": [
+    0.5649999976158142,
+    0.9959999918937683,
+    0.11500000208616257
+   ],
+   "looks_at_words": "between the desk and the window",
+   "robot": "humanoid"
+  },
+  {
+   "position": [
+    1.425,
+    1.125,
+    1.6
+   ],
+   "yaw_deg": 195.0,
+   "pitch_deg": -10.0,
+   "hfov_deg": 70.0,
+   "n_points": 907,
+   "score": 155.2,
+   "unknown_area_m2": 0.64,
+   "share_of_unknown": 0.151,
+   "looks_at": [
+    0.013000000268220901,
+    0.890999972820282,
+    1.5199999809265137
+   ],
+   "looks_at_words": "next to the window",
+   "robot": "humanoid"
+  },
+  {
+   "position": [
+    1.125,
+    2.025,
+    0.4
+   ],
+   "yaw_deg": 255.0,
+   "pitch_deg": -10.0,
+   "hfov_deg": 70.0,
+   "n_points": 683,
+   "score": 683.0,
+   "unknown_area_m2": 0.48,
+   "share_of_unknown": 0.114,
+   "looks_at": [
+    1.031000018119812,
+    0.7710000276565552,
+    0.0949999988079071
+   ],
+   "looks_at_words": "between the bed and the radiator",
+   "robot": "compact"
+  },
+  {
+   "position": [
+    0.525,
+    1.125,
+    0.4
+   ],
+   "yaw_deg": 45.0,
+   "pitch_deg": -10.0,
+   "hfov_deg": 70.0,
+   "n_points": 324,
+   "score": 267.0,
+   "unknown_area_m2": 0.23,
+   "share_of_unknown": 0.054,
+   "looks_at": [
+    0.9900000095367432,
+    2.063999891281128,
+    0.10899999737739563
+   ],
+   "looks_at_words": "at the foot of the bed",
+   "robot": "compact"
+  }
+ ],
+ "run": {
+  "version": "1.0.0",
+  "date": "2026-10-15",
+  "before_video": "before_IMG_8815.MOV",
+  "after_video": "after_IMG_8817.MOV",
+  "frames_before": 180,
+  "frames_after": 180,
+  "depth_error_pct": 1.6,
+  "depth_error_scale_only_pct": 4.1,
+  "focal_px": 584.4,
+  "hfov_deg": 95.2,
+  "hfov_source": "14 mm (35 mm equivalent) in the file metadata of iPhone 16 Pro",
+  "scale_source": "depth network, corrected for the lens (95 deg vs 60 deg in training: x0.527)",
+  "sfm_points": 46022,
+  "device": "CPU, 2 cores",
+  "total_minutes": 77,
+  "stage_seconds": "keyframes 530s, reconstruction 995s, depth 2014s, detections 762s, changes 31s, outputs 300s"
+ }
+}

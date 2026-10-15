@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeltaNav · What changed in the room?</title>
+<style>
+:root { --bg:#f3f4f7; --panel:rgba(255,255,255,0.94); --text:#1d1f24; --muted:#5d6370; --line:#d9dce3;
+        --moved:#f59614; --removed:#dc3c3c; --added:#28aa46; --unknown:#855cc7; --accent:#1473dc; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#16181d; --panel:rgba(30,33,40,0.94); --text:#e8eaef; --muted:#9aa1ad; --line:#353a45; } }
+:root[data-theme="dark"] { --bg:#16181d; --panel:rgba(30,33,40,0.94); --text:#e8eaef; --muted:#9aa1ad; --line:#353a45; }
+html, body { margin:0; height:100%; overflow:hidden; background:var(--bg); color:var(--text);
+  font:14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+#c { position:fixed; inset:0; }
+.panel { position:fixed; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px 14px;
+  box-shadow:0 4px 18px rgba(0,0,0,0.08); max-height:calc(100vh - 32px); overflow:auto; }
+#left { top:16px; left:16px; width:250px; }
+#right { top:16px; right:16px; width:330px; }
+h1 { font-size:16px; margin:0 0 2px; } .sub { color:var(--muted); font-size:12px; margin-bottom:10px; }
+.modes { display:grid; grid-template-columns:repeat(4, 1fr); gap:4px; margin:8px 0 10px; }
+.modes button { padding:7px 0; border:1px solid var(--line); background:transparent; color:var(--text); border-radius:6px;
+  cursor:pointer; font-size:12.5px; }
+.modes button.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+.layers label { display:flex; align-items:center; gap:7px; padding:3px 0; cursor:pointer; font-size:13px; }
+.layers select { margin-left:auto; font-size:12px; background:transparent; color:var(--text); border:1px solid var(--line); border-radius:4px; }
+.sw { width:10px; height:10px; border-radius:2px; display:inline-block; }
+.card { border:1px solid var(--line); border-left:5px solid; border-radius:8px; padding:9px 10px; margin:8px 0; cursor:pointer; }
+.card:hover { background:rgba(127,127,127,0.07); } .card.sel { box-shadow:0 0 0 2px var(--accent); }
+.card .t { font-weight:600; font-size:13px; } .card .s { font-size:12.5px; margin:4px 0; }
+.card table { font-size:11.5px; color:var(--muted); border-collapse:collapse; width:100%; }
+.card td { padding:1px 4px 1px 0; vertical-align:top; } .card td:first-child { white-space:nowrap; }
+.badge { font-size:10.5px; font-weight:700; color:#fff; padding:1px 6px; border-radius:9px; text-transform:uppercase; margin-right:6px; }
+#hint { position:fixed; bottom:12px; left:50%; transform:translateX(-50%); color:var(--muted); font-size:12px;
+  background:var(--panel); padding:5px 12px; border-radius:14px; border:1px solid var(--line); white-space:nowrap; }
+.lbl { position:fixed; pointer-events:none; font-size:12px; font-weight:600; color:#fff; padding:2px 7px; border-radius:5px;
+  transform:translate(-50%, -120%); white-space:nowrap; box-shadow:0 1px 4px rgba(0,0,0,0.25); }
+.lbl.furn { background:rgba(255,255,255,0.85); color:#333; font-weight:500; font-size:11px; }
+.lbl.nbv { background:#1e8ce6; }
+#loading { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--muted); }
+#toggle { display:none; }
+@media (max-width: 760px) {
+  #left { top:auto; bottom:52px; left:16px; right:16px; width:auto; max-height:40vh; }
+  #right { display:none; } #right.show { display:block; top:16px; left:16px; right:16px; width:auto; max-height:45vh; }
+  #toggle { display:block; position:fixed; top:16px; right:16px; z-index:3; padding:6px 10px; border-radius:6px;
+    border:1px solid var(--line); background:var(--panel); color:var(--text); }
+  #hint { display:none; }
+}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="loading">Loading the room...</div>
+<div class="panel" id="left">
+  <h1>What changed in the room?</h1>
+  <div class="sub" id="subtitle"></div>
+  <div class="modes" id="modes">
+    <button data-m="shared" class="on" title="One room model from both videos, with both versions of each changed object">Shared</button>
+    <button data-m="before" title="The room as the before video saw it">Before</button>
+    <button data-m="after" title="The room as the after video saw it">After</button>
+    <button data-m="blink" title="Alternate before and after (blink comparator)">Blink</button>
+  </div>
+  <div class="layers">
+    <label><input type="checkbox" data-l="room" checked> Room surfaces</label>
+    <label><input type="checkbox" data-l="boxes" checked> Changes: boxes, arrows, labels</label>
+    <label><input type="checkbox" data-l="unknown"> <span class="sw" style="background:var(--unknown)"></span> Could not be checked</label>
+    <label><input type="checkbox" data-l="rays"> <span class="sw" style="background:#f2c230"></span> Evidence: see-through rays</label>
+    <label><input type="checkbox" data-l="furniture"> Furniture labels</label>
+    <label><input type="checkbox" data-l="robot"> Robot map + routes <select id="robotSel"></select></label>
+    <label><input type="checkbox" data-l="nbv"> <span class="sw" style="background:#1e8ce6"></span> Where to look next</label>
+    <label><input type="checkbox" data-l="cams"> Camera paths (both videos)</label>
+    <label><input type="checkbox" data-l="axes" checked> Room axes + 1 m grid</label>
+  </div>
+  <div class="sub" style="margin-top:10px">Room frame: x, y along the walls, z up, metres, origin on the floor in a corner.</div>
+</div>
+<button id="toggle">Changes</button>
+<div class="panel" id="right"><div style="font-weight:600">Changes</div><div id="cards"></div><div class="sub" id="notes"></div></div>
+<div id="hint">Left drag: rotate &nbsp;·&nbsp; Right drag: pan &nbsp;·&nbsp; Wheel: zoom &nbsp;·&nbsp; Click a change to fly to it</div>
+<div id="labels"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const DATA = /*DATA*/null;
+const COLORS = { moved: 0xf59614, removed: 0xdc3c3c, added: 0x28aa46 };
+const CSS = { moved: '#f59614', removed: '#dc3c3c', added: '#28aa46' };
+let renderer, scene, camera, controls, groups = {}, labelEls = [], mode = 'shared', blinkTimer = null, blinkState = 0;
+const layer = { room: true, boxes: true, unknown: false, rays: false, furniture: false, robot: false, nbv: false, cams: false, axes: true };
+
+async function unpack(b64, Type) {
+  const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  const ds = new DecompressionStream('gzip');
+  const buf = await new Response(new Blob([bin]).stream().pipeThrough(ds)).arrayBuffer();
+  return new Type(buf);
+}
+async function meshFrom(m, q) {
+  const V = await unpack(m.v, Uint16Array), C = await unpack(m.c, Uint8Array), F = await unpack(m.f, Uint32Array);
+  const P = new Float32Array(V.length);
+  for (let i = 0; i < V.length; i += 3) { P[i] = q.lo[0] + V[i] * q.step; P[i + 1] = q.lo[1] + V[i + 1] * q.step; P[i + 2] = q.lo[2] + V[i + 2] * q.step; }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(P, 3));
+  g.setAttribute('color', new THREE.BufferAttribute(C, 3, true));
+  g.setIndex(new THREE.BufferAttribute(F, 1));
+  g.computeVertexNormals();
+  return new THREE.Mesh(g, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.FrontSide }));
+}
+async function pointsFrom(p, q, color, size) {
+  const V = await unpack(p, Uint16Array); const P = new Float32Array(V.length);
+  for (let i = 0; i < V.length; i += 3) { P[i] = q.lo[0] + V[i] * q.step; P[i + 1] = q.lo[1] + V[i + 1] * q.step; P[i + 2] = q.lo[2] + V[i + 2] * q.step; }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(P, 3));
+  return new THREE.Points(g, new THREE.PointsMaterial({ color, size, sizeAttenuation: true, transparent: true, opacity: 0.75 }));
+}
+function line(pts, color, dashed, width) {
+  const g = new THREE.BufferGeometry().setFromPoints(pts.map(p => new THREE.Vector3(...p)));
+  const m = dashed ? new THREE.LineDashedMaterial({ color, dashSize: 0.06, gapSize: 0.05 }) : new THREE.LineBasicMaterial({ color });
+  const l = new THREE.Line(g, m); if (dashed) l.computeLineDistances(); return l;
+}
+function boxLines(K, color, dashed) {
+  const E = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  const grp = new THREE.Group();
+  for (const [a, b] of E) {
+    // a tube makes the box readable at any zoom
+    const A = new THREE.Vector3(...K[a]), B = new THREE.Vector3(...K[b]);
+    if (dashed) { grp.add(line([K[a], K[b]], color, true)); continue; }
+    const len = A.distanceTo(B), cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, len, 6), new THREE.MeshBasicMaterial({ color }));
+    cyl.position.copy(A).add(B).multiplyScalar(0.5); cyl.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), B.clone().sub(A).normalize());
+    grp.add(cyl);
+  }
+  return grp;
+}
+function addLabel(text, pos, cls, color, layerName, modes) {
+  const el = document.createElement('div'); el.className = 'lbl ' + (cls || ''); el.textContent = text;
+  if (color) el.style.background = color;
+  document.getElementById('labels').appendChild(el);
+  labelEls.push({ el, pos: new THREE.Vector3(...pos), layer: layerName, modes });
+}
+function grp(name) { if (!groups[name]) { groups[name] = new THREE.Group(); scene.add(groups[name]); } return groups[name]; }
+
+async function build() {
+  const D = DATA, q = D.quant;
+  document.getElementById('subtitle').textContent = D.subtitle;
+  renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('c'), antialias: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  scene = new THREE.Scene();
+  const dark = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+  scene.background = new THREE.Color(dark || '#f3f4f7');
+  camera = new THREE.PerspectiveCamera(50, 1, 0.02, 100); camera.up.set(0, 0, 1);
+  controls = new THREE.OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.dampingFactor = 0.12;
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8a8a, 0.85));
+  const dl = new THREE.DirectionalLight(0xffffff, 0.35); dl.position.set(2, -3, 5); scene.add(dl);
+  for (const k of ['shared', 'before', 'after']) if (D.meshes[k]) grp('room_' + k).add(await meshFrom(D.meshes[k], q));
+  for (const o of D.objects) { const m = await meshFrom(o.mesh, q); grp('obj_' + o.epoch).add(m); }
+  // change boxes: solid where the object is in that video, dashed where its place is empty
+  for (const c of D.changes) {
+    for (const p of c.places) {
+      for (const ep of ['before', 'after']) {
+        const present = p.epoch === ep;
+        grp('boxes_' + ep).add(boxLines(p.corners, COLORS[c.type], !present));
+      }
+      const top = p.corners.reduce((a, b) => a[2] > b[2] ? a : b);
+      const ctr = p.corners.reduce((s, v) => [s[0] + v[0] / 8, s[1] + v[1] / 8, s[2] + v[2] / 8], [0, 0, 0]);
+      for (const ep of ['before', 'after', 'shared']) {
+        const present = p.epoch === ep || ep === 'shared';
+        addLabel((present ? '' : '(empty) ') + p.label, [ctr[0], ctr[1], top[2] + 0.12], '', CSS[c.type], 'boxes', [ep]);
+      }
+    }
+    for (const p of c.places) grp('boxes_shared').add(boxLines(p.corners, COLORS[c.type], p.role === 'from' || c.type === 'removed'));
+    if (c.arrow) {
+      const [a, b] = c.arrow, mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, Math.max(a[2], b[2]) + 0.45];
+      const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(...a), new THREE.Vector3(...mid), new THREE.Vector3(...b));
+      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 40, 0.012, 6), new THREE.MeshBasicMaterial({ color: COLORS[c.type] }));
+      const dir = curve.getTangent(1).normalize();
+      const head = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.12, 12), new THREE.MeshBasicMaterial({ color: COLORS[c.type] }));
+      head.position.copy(new THREE.Vector3(...b)); head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+      for (const ep of ['shared', 'before', 'after']) { grp('boxes_' + ep).add(ep === 'shared' ? tube : tube.clone()); grp('boxes_' + ep).add(ep === 'shared' ? head : head.clone()); }
+    }
+    if (c.rays && c.rays.length) {
+      for (const r of c.rays) { grp('rays').add(line([r[0], r[1]], 0xf2c230)); grp('rays').add(line([r[1], r[2]], 0xf2c230, true)); }
+    }
+  }
+  if (D.unknown) grp('unknown').add(await pointsFrom(D.unknown, q, 0x855cc7, 0.018));
+  for (const f of D.furniture) addLabel(f.label, f.pos, 'furn', null, 'furniture', ['shared', 'before', 'after']);
+  // robots
+  const sel = document.getElementById('robotSel');
+  for (const r of D.robots) {
+    const o = document.createElement('option'); o.value = r.name; o.textContent = r.name; sel.appendChild(o);
+    const tex = new THREE.TextureLoader().load(r.map_png); tex.magFilter = THREE.NearestFilter;
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(r.extent[1] - r.extent[0], r.extent[3] - r.extent[2]),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.85, depthWrite: false }));
+    plane.position.set((r.extent[0] + r.extent[1]) / 2, (r.extent[2] + r.extent[3]) / 2, 0.012);
+    grp('robot_' + r.name).add(plane);
+    for (const rt of r.routes_before) grp('robot_' + r.name).add(line(rt.map(p => [p[0], p[1], 0.03]), 0x8c8c8c, true));
+    for (const rt of r.routes_updated) grp('robot_' + r.name).add(line(rt.map(p => [p[0], p[1], 0.04]), 0x1473dc));
+    for (const g of r.goals) {
+      const ar = new THREE.ArrowHelper(new THREE.Vector3(Math.cos(g.yaw), Math.sin(g.yaw), 0), new THREE.Vector3(g.x, g.y, 0.05), 0.25, 0x1473dc, 0.08, 0.06);
+      grp('robot_' + r.name).add(ar);
+      addLabel(g.name, [g.x, g.y, 0.08], 'furn', null, 'robot:' + r.name, ['shared', 'before', 'after']);
+    }
+    if (r.start) { const s = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffc800 })); s.position.set(r.start[0], r.start[1], 0.06); grp('robot_' + r.name).add(s); }
+  }
+  for (const [k, v] of D.next_views.entries()) {
+    const yaw = v.yaw_deg * Math.PI / 180, pitch = v.pitch_deg * Math.PI / 180, h = Math.tan(v.hfov_deg * Math.PI / 360) * 0.45;
+    const p = new THREE.Vector3(...v.pos), f = new THREE.Vector3(Math.cos(yaw) * Math.cos(pitch), Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch));
+    const r = new THREE.Vector3(Math.sin(yaw), -Math.cos(yaw), 0), u = new THREE.Vector3().crossVectors(r, f);
+    const corners = [[1, 1], [1, -1], [-1, -1], [-1, 1]].map(([a, b]) => p.clone().add(f.clone().multiplyScalar(0.45)).add(r.clone().multiplyScalar(a * h)).add(u.clone().multiplyScalar(b * h * 0.75)));
+    for (const cc of corners) grp('nbv').add(line([p.toArray(), cc.toArray()], 0x1e8ce6));
+    grp('nbv').add(line([...corners.map(x => x.toArray()), corners[0].toArray()], 0x1e8ce6));
+    addLabel('look here next #' + (k + 1), v.pos, 'nbv', null, 'nbv', ['shared', 'before', 'after']);
+  }
+  for (const [ep, pts] of Object.entries(D.cams)) grp('cams').add(line(pts, ep === 'before' ? 0x285acd : 0x8c32a5));
+  const axes = grp('axes');
+  axes.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), 0.6, 0xe63232, 0.1, 0.06));
+  axes.add(new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), 0.6, 0x32be3c, 0.1, 0.06));
+  axes.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, 0), 0.6, 0x3c5ae6, 0.1, 0.06));
+  const [x0, x1, y0, y1] = D.extent, n = Math.ceil(Math.max(x1 - x0, y1 - y0)) + 1;
+  const grid = new THREE.GridHelper(n, n, 0x9aa0aa, 0xc4c8cf); grid.rotation.x = Math.PI / 2; grid.position.set(Math.floor(x0) + n / 2, Math.floor(y0) + n / 2, -0.005);
+  grid.material.transparent = true; grid.material.opacity = 0.35; axes.add(grid);
+  addLabel('x', [0.68, 0, 0], 'furn', null, 'axes', ['shared', 'before', 'after']); addLabel('y', [0, 0.68, 0], 'furn', null, 'axes', ['shared', 'before', 'after']);
+  // cards
+  const cards = document.getElementById('cards');
+  for (const c of D.changes) {
+    const d = document.createElement('div'); d.className = 'card'; d.style.borderLeftColor = CSS[c.type]; d.dataset.id = c.id;
+    d.innerHTML = `<div class="t"><span class="badge" style="background:${CSS[c.type]}">${c.type}</span>${c.id} ${c.label}</div><div class="s">${c.sentence}</div><table>${c.rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>`;
+    d.onclick = () => { document.querySelectorAll('.card').forEach(x => x.classList.toggle('sel', x === d)); focus(c.focus); };
+    cards.appendChild(d);
+  }
+  if (!D.changes.length) cards.innerHTML = '<div class="card"><div class="s">No changes found. Nothing was seen moved, added or removed in the parts of the room both videos could check.</div></div>';
+  document.getElementById('notes').innerHTML = D.notes;
+  const c0 = D.home; camera.position.set(...c0.pos); controls.target.set(...c0.target); controls.update();
+  document.querySelectorAll('#modes button').forEach(b => b.onclick = () => setMode(b.dataset.m));
+  document.querySelectorAll('.layers input').forEach(i => i.onchange = () => { layer[i.dataset.l] = i.checked; apply(); });
+  sel.onchange = apply;
+  document.getElementById('toggle').onclick = () => document.getElementById('right').classList.toggle('show');
+  window.addEventListener('resize', resize); resize(); apply();
+  document.getElementById('loading').remove();
+  animate();
+  window.viewerReady = true;
+}
+let flight = null;
+function focus(f) {
+  const from = { p: camera.position.clone(), t: controls.target.clone() }, to = { p: new THREE.Vector3(...f.pos), t: new THREE.Vector3(...f.target) };
+  flight = { from, to, t0: performance.now(), dur: 900 };
+}
+function shown() { return mode === 'blink' ? (blinkState ? 'after' : 'before') : mode; }
+function apply() {
+  const m = shown();
+  for (const k of ['shared', 'before', 'after']) { if (groups['room_' + k]) groups['room_' + k].visible = layer.room && m === k; if (groups['boxes_' + k]) groups['boxes_' + k].visible = layer.boxes && m === k; }
+  if (groups.obj_before) groups.obj_before.visible = layer.room && m === 'shared';
+  if (groups.obj_after) groups.obj_after.visible = layer.room && m === 'shared';
+  for (const k of ['unknown', 'rays', 'nbv', 'cams', 'axes']) if (groups[k]) groups[k].visible = layer[k];
+  const rsel = document.getElementById('robotSel').value;
+  for (const r of DATA.robots) if (groups['robot_' + r.name]) groups['robot_' + r.name].visible = layer.robot && r.name === rsel;
+  for (const L of labelEls) {
+    let on = L.modes.includes(m);
+    if (L.layer.startsWith('robot:')) on = on && layer.robot && L.layer === 'robot:' + rsel; else on = on && layer[L.layer];
+    L.on = on; if (!on) L.el.style.display = 'none';
+  }
+}
+function setMode(m) {
+  mode = m; document.querySelectorAll('#modes button').forEach(b => b.classList.toggle('on', b.dataset.m === m));
+  clearInterval(blinkTimer); if (m === 'blink') blinkTimer = setInterval(() => { blinkState ^= 1; apply(); }, 900);
+  apply();
+}
+function resize() { const w = window.innerWidth, h = window.innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+const tmp = new THREE.Vector3();
+function animate() {
+  requestAnimationFrame(animate);
+  if (flight) {
+    let s = Math.min(1, (performance.now() - flight.t0) / flight.dur); s = s * s * (3 - 2 * s);
+    camera.position.lerpVectors(flight.from.p, flight.to.p, s); controls.target.lerpVectors(flight.from.t, flight.to.t, s);
+    if (s >= 1) flight = null;
+  }
+  controls.update(); renderer.render(scene, camera);
+  const w = window.innerWidth, h = window.innerHeight;
+  for (const L of labelEls) {
+    if (!L.on) continue;
+    tmp.copy(L.pos).project(camera);
+    if (tmp.z > 1 || tmp.z < -1) { L.el.style.display = 'none'; continue; }
+    L.el.style.display = 'block'; L.el.style.left = ((tmp.x + 1) / 2 * w) + 'px'; L.el.style.top = ((1 - tmp.y) / 2 * h) + 'px';
+  }
+}
+// hooks for scripted screenshots and animations
+window.viewer = { setMode, focus, setLayer: (k, v) => { layer[k] = v; const i = document.querySelector(`[data-l="${k}"]`); if (i) i.checked = v; apply(); },
+  setRobot: n => { document.getElementById('robotSel').value = n; apply(); },
+  orbit: (az, el, dist, target) => { const t = new THREE.Vector3(...(target || controls.target.toArray())); camera.position.set(t.x + dist * Math.cos(el) * Math.cos(az), t.y + dist * Math.cos(el) * Math.sin(az), t.z + dist * Math.sin(el)); controls.target.copy(t); controls.update(); },
+  hidePanels: (v) => { for (const id of ['left', 'right', 'hint']) document.getElementById(id).style.display = v ? 'none' : ''; },
+  data: () => DATA };
+build().catch(e => { document.getElementById('loading').textContent = 'Could not load the viewer: ' + e; console.error(e); });
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+ "seconds": {
+  "keyframes": 530,
+  "reconstruction": 995,
+  "depth": 2014,
+  "detections": 762,
+  "changes": 31,
+  "outputs": 300
+ },
+ "version": "1.0.0",
+ "python": "3.13.16",
+ "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+ "inputs": {
+  "before": "before_IMG_8815.MOV",
+  "after": "after_IMG_8817.MOV"
+ },
+ "device": "CPU, 2 cores",
+ "total_seconds": 4632
+}

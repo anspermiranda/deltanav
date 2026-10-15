@@ -1,0 +1,187 @@
+{
+ "sentences": [
+  "The black office chair moved 1.4 m, from the desk to between the bed and the wardrobe, and turned about 55\u00b0.",
+  "The blue suitcase at the foot of the bed, against the wall, is gone: 48 frames of the after video look straight through the space it filled.",
+  "A black backpack (0.47 m tall) appeared at the foot of the bed. It stands on the floor, so it is a new obstacle."
+ ],
+ "landmarks": [
+  {
+   "label": "bed",
+   "xy": [
+    2.575,
+    1.75
+   ],
+   "footprint": {
+    "center": [
+     2.5749998092651367,
+     1.749999761581421
+    ],
+    "size": [
+     1.3499996662139893,
+     1.999999761581421
+    ],
+    "angle": -90.0
+   },
+   "z": [
+    0.116,
+    0.8
+   ],
+   "support": 102466,
+   "detections": 471
+  },
+  {
+   "label": "wardrobe",
+   "xy": [
+    2.575,
+    0.425
+   ],
+   "footprint": {
+    "center": [
+     2.575000047683716,
+     0.42500001192092896
+    ],
+    "size": [
+     0.5,
+     1.600000023841858
+    ],
+    "angle": -90.0
+   },
+   "z": [
+    0.114,
+    1.57
+   ],
+   "support": 2389,
+   "detections": 40
+  },
+  {
+   "label": "radiator",
+   "xy": [
+    0.45,
+    0.725
+   ],
+   "footprint": {
+    "center": [
+     0.44999998807907104,
+     0.7250000238418579
+    ],
+    "size": [
+     1.0,
+     0.75
+    ],
+    "angle": -90.0
+   },
+   "z": [
+    0.116,
+    0.703
+   ],
+   "support": 13337,
+   "detections": 94
+  },
+  {
+   "label": "desk",
+   "xy": [
+    1.7,
+    0.3
+   ],
+   "footprint": {
+    "center": [
+     1.7000000476837158,
+     0.30000001192092896
+    ],
+    "size": [
+     0.44999998807907104,
+     1.4499999284744263
+    ],
+    "angle": -90.0
+   },
+   "z": [
+    0.086,
+    0.689
+   ],
+   "support": 10061,
+   "detections": 117
+  },
+  {
+   "label": "window",
+   "xy": [
+    0.05,
+    0.675
+   ],
+   "footprint": {
+    "center": [
+     0.04999999701976776,
+     0.6750000715255737
+    ],
+    "size": [
+     0.8000000715255737,
+     0.3499999940395355
+    ],
+    "angle": -90.0
+   },
+   "z": [
+    0.741,
+    1.89
+   ],
+   "support": 8827,
+   "detections": 38
+  },
+  {
+   "label": "nightstand",
+   "xy": [
+    3.25,
+    0.975
+   ],
+   "footprint": {
+    "center": [
+     3.25,
+     0.9749999642372131
+    ],
+    "size": [
+     0.3999999761581421,
+     0.34999990463256836
+    ],
+    "angle": -90.0
+   },
+   "z": [
+    0.047,
+    0.585
+   ],
+   "support": 6841,
+   "detections": 139
+  },
+  {
+   "label": "door",
+   "xy": [
+    0.55,
+    2.45
+   ],
+   "footprint": {
+    "center": [
+     0.5499999523162842,
+     2.4499998092651367
+    ],
+    "size": [
+     0.15000006556510925,
+     0.8499999046325684
+    ],
+    "angle": -90.0
+   },
+   "z": [
+    0.076,
+    1.824
+   ],
+   "support": 4616,
+   "detections": 40
+  }
+ ],
+ "bounds": [
+  [
+   -0.03700000047683716,
+   -0.05700000002980232
+  ],
+  [
+   3.631999969482422,
+   2.5840001106262207
+  ]
+ ]
+}

@@ -1,0 +1,332 @@
+{
+ "control_before_chest_vs_waist": {
+  "ours": [],
+  "ours_n": 0,
+  "naive_objects": 3,
+  "frames": [
+   101,
+   79
+  ],
+  "seconds": 31,
+  "rejected": [
+   "room divider: 3 of 14 frames that saw the place clearly saw a surface there"
+  ]
+ },
+ "control_after_chest_vs_waist": {
+  "ours": [],
+  "ours_n": 0,
+  "naive_objects": 2,
+  "frames": [
+   100,
+   80
+  ],
+  "seconds": 38,
+  "rejected": [
+   "office chair: 6 of 32 frames that saw the place clearly saw a surface there"
+  ]
+ },
+ "cross_before_chest_vs_after_waist": {
+  "ours": [
+   "moved office chair",
+   "removed saddlebag"
+  ],
+  "ours_n": 2,
+  "naive_objects": 5,
+  "frames": [
+   101,
+   80
+  ],
+  "seconds": 144,
+  "rejected": [
+   "object: small, and no detector recognises it as an object in any frame",
+   "object: 6 of 18 frames that saw the place clearly saw a surface there",
+   "object: 3 of 17 frames that saw the place clearly saw a surface there"
+  ]
+ },
+ "cross_before_waist_vs_after_chest": {
+  "ours": [
+   "moved office chair",
+   "removed suitcase",
+   "added backpack"
+  ],
+  "ours_n": 3,
+  "naive_objects": 9,
+  "frames": [
+   79,
+   100
+  ],
+  "seconds": 125,
+  "rejected": []
+ },
+ "full": {
+  "ours": [
+   "moved office chair",
+   "removed suitcase",
+   "added backpack"
+  ],
+  "ours_n": 3,
+  "naive_objects": 12,
+  "frames": [
+   180,
+   180
+  ],
+  "seconds": 291,
+  "rejected": []
+ },
+ "never_filmed": {
+  "ours": [
+   "moved office chair"
+  ],
+  "ours_n": 1,
+  "naive_objects": 5,
+  "frames": [
+   180,
+   115
+  ],
+  "seconds": 203,
+  "rejected": [],
+  "place_points": 954,
+  "ours_on_place": {
+   "gone": 0.0,
+   "same": 0.0,
+   "unknown": 1.0
+  },
+  "naive_on_place": 1.0
+ },
+ "only_occluded": {
+  "ours": [
+   "moved office chair"
+  ],
+  "ours_n": 1,
+  "naive_objects": 10,
+  "frames": [
+   180,
+   131
+  ],
+  "seconds": 207,
+  "rejected": [],
+  "place_points": 953,
+  "ours_on_place": {
+   "gone": 0.0,
+   "same": 0.0,
+   "unknown": 1.0
+  },
+  "naive_on_place": 1.0
+ },
+ "verification_loop": {
+  "initial_frames": 25,
+  "candidate_frames": 155,
+  "candidates_seeing_the_place": 65,
+  "guided": {
+   "confirmed_after": 8,
+   "checked": [
+    0.4996,
+    0.5098,
+    0.5945,
+    0.6185,
+    0.7334,
+    0.7701,
+    0.7818,
+    0.8027,
+    0.8256,
+    0.8343,
+    0.8426,
+    0.857,
+    0.8603,
+    0.8692,
+    0.8777,
+    0.8815,
+    0.8835,
+    0.8853,
+    0.8943,
+    0.8961,
+    0.898,
+    0.8992,
+    0.9045,
+    0.9049,
+    0.906,
+    0.9065,
+    0.9085,
+    0.9082,
+    0.9105,
+    0.9109,
+    0.9112
+   ],
+   "picked_seeing_the_place": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    false,
+    false,
+    true,
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    true,
+    true,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false
+   ]
+  },
+  "random": {
+   "confirmed_after": [
+    null,
+    null,
+    16,
+    13,
+    null,
+    12,
+    18,
+    13,
+    12,
+    13
+   ],
+   "median": 13.0,
+   "never": 3,
+   "checked_mean": [
+    0.4996,
+    0.5026,
+    0.5089,
+    0.5242,
+    0.5383,
+    0.5506,
+    0.5595,
+    0.5811,
+    0.5906,
+    0.6011,
+    0.6072,
+    0.6169,
+    0.6263,
+    0.6341,
+    0.6456,
+    0.6508,
+    0.6552,
+    0.6644,
+    0.6871,
+    0.6947,
+    0.7006,
+    0.7116,
+    0.7172,
+    0.7277,
+    0.732,
+    0.7366,
+    0.7496,
+    0.7527,
+    0.7582,
+    0.7712,
+    0.777
+   ],
+   "checked_p25": [
+    0.4996,
+    0.5006,
+    0.5054,
+    0.5117,
+    0.5193,
+    0.5342,
+    0.5406,
+    0.5467,
+    0.5494,
+    0.561,
+    0.5737,
+    0.581,
+    0.5859,
+    0.5928,
+    0.5966,
+    0.6069,
+    0.6132,
+    0.6276,
+    0.6437,
+    0.6479,
+    0.6488,
+    0.68,
+    0.6926,
+    0.6949,
+    0.6993,
+    0.7021,
+    0.728,
+    0.7281,
+    0.7331,
+    0.7498,
+    0.7555
+   ],
+   "checked_p75": [
+    0.4996,
+    0.5051,
+    0.5114,
+    0.5254,
+    0.5398,
+    0.549,
+    0.5657,
+    0.6071,
+    0.63,
+    0.6324,
+    0.6325,
+    0.6403,
+    0.6463,
+    0.6619,
+    0.6658,
+    0.6702,
+    0.6703,
+    0.676,
+    0.731,
+    0.7407,
+    0.7523,
+    0.7533,
+    0.754,
+    0.7741,
+    0.7751,
+    0.7789,
+    0.7809,
+    0.7882,
+    0.7891,
+    0.7923,
+    0.7936
+   ]
+  }
+ },
+ "info": {
+  "passes": {
+   "before": [
+    101,
+    79
+   ],
+   "after": [
+    100,
+    80
+   ],
+   "camera_height_m": {
+    "before": [
+     1.36,
+     0.95
+    ],
+    "after": [
+     1.28,
+     0.98
+    ]
+   }
+  },
+  "hidden": {
+   "object": "suitcase",
+   "after_frames": 180,
+   "in_view": 65,
+   "saw_it": 49
+  }
+ }
+}
