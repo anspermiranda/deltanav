@@ -19,6 +19,7 @@ next.
 **[Open the 3D window in Rerun](https://app.rerun.io/version/0.39.0/?url=https://anspermiranda.github.io/deltanav/scene.rrd)** ·
 
 **[Full report for my room](https://anspermiranda.github.io/deltanav/report.html)** ([markdown](examples/my_room/report.md)) ·
+
 [design note](DESIGN.md) · **[run it on your own room](#run-it-on-your-own-room)**
 
 ---
