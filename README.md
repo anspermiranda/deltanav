@@ -158,14 +158,18 @@ Each robot also gets a **goal pose for inspecting every change** (`check_C3_back
 occupancy grid** (free / occupied / unknown in 4.5 cm voxels, `maps/occupancy3d.npz`) for a robot that is not
 flat: a humanoid's arms and head need the space above the floor as well.
 
-**Ready for a robot.** The maps load straight into Nav2, and the goal poses are in the same (map) frame:
+**Ready for a robot (optional, needs ROS 2).** DeltaNav itself does not use ROS. The two snippets below are
+for someone with a robot, or a robot simulator, running ROS 2 and its navigation stack, Nav2. The first loads
+the updated map that DeltaNav wrote into Nav2's map server, so the robot plans on today's room instead of
+yesterday's. The second reads the goal poses DeltaNav exported, in the same map frame, and sends the robot to
+each in turn: in front of each piece of furniture, then to look at each change.
 
 ```bash
 ros2 run nav2_map_server map_server --ros-args -p yaml_filename:=outputs/my_room/result/maps/humanoid_map_updated.yaml
 ```
 
 ```python
-# send the robot to every piece of furniture (Nav2 simple commander)
+# drive to every goal pose DeltaNav exported: furniture, then each change to check (Nav2 simple commander)
 import yaml, math, rclpy
 from geometry_msgs.msg import PoseStamped
 from nav2_simple_commander.robot_navigator import BasicNavigator
@@ -363,13 +367,29 @@ Good to know:
 
 ### 5. Run
 
+The command takes the two videos and a name for the results:
+
 ```bash
 cd deltanav && source .venv/bin/activate
-deltanav run --before ~/Videos/lab_before.mov --after ~/Videos/lab_after.mov --out outputs/lab
+deltanav run --before PATH/TO/FIRST_VIDEO --after PATH/TO/SECOND_VIDEO --out outputs/NAME
 ```
 
-- `--out` is a new folder for this experiment. Use a new name for each one (`outputs/lab`,
-  `outputs/kitchen`, ...); results never overwrite each other or the example.
+For example, if the phone called the videos `IMG_1234.MOV` and `IMG_1240.MOV` and you copied them to
+`Downloads`:
+
+```bash
+deltanav run --before ~/Downloads/IMG_1234.MOV --after ~/Downloads/IMG_1240.MOV --out outputs/my_lab
+```
+
+- **`--before`** is the video filmed *before* you changed anything, and **`--after`** the one filmed *after*.
+  The flag decides which is which, not the file name, so nothing needs renaming. (Swap them and every
+  "added" becomes "removed".)
+- **`--out`** is the folder for the results, and DeltaNav creates it. That is why there is no `outputs/`
+  folder on GitHub: it appears on your computer, inside the folder you run the command from, when you run
+  it. Use a new name for each pair of videos (`outputs/my_lab`, `outputs/kitchen`, ...). DeltaNav will not
+  put a new pair of videos into a folder that already holds another pair's results.
+- A path with spaces goes in quotes: `--before "/home/you/My Videos/room before.mov"`. Or type
+  `deltanav run --before ` and drag the video from the file manager into the terminal: it pastes the path.
 - **Lens:** read from the file for iPhone videos. For other phones add `--hfov 70` for the normal lens or
   `--hfov 100` for an ultra-wide one; it only needs to be roughly right.
 - `--quick` is faster and rougher (90 frames per video and the small depth model).
@@ -385,7 +405,7 @@ deltanav run --before ~/Videos/lab_before.mov --after ~/Videos/lab_after.mov --o
 ### 6. What you get
 
 When the run finishes, the **3D viewer** and the **report** open in your browser by themselves. Everything is
-in `outputs/lab/result/`:
+in `outputs/NAME/result/` (in the example above, `outputs/my_lab/result/`):
 
 | File | What it is |
 |---|---|
@@ -397,9 +417,9 @@ in `outputs/lab/result/`:
 | `maps/` | Robot maps (ROS `map_server` `.pgm` + `.yaml`), goal poses (`*_goals.yaml`), routes (`routes.json`), 3D occupancy. |
 | `ledger.json` | Every change as data, in the room frame (positions in metres, rotation, size, evidence). |
 | `meshes/*.ply` | The 3D surfaces: open them in MeshLab, Blender or CloudCompare. |
-| `scene.rrd` | The same scene for the Rerun window: `deltanav view outputs/lab --rerun`. |
+| `scene.rrd` | The same scene for the Rerun window: `deltanav view outputs/my_lab --rerun`. |
 
-To open the viewer and the report again later: `deltanav view outputs/lab`.
+To open the viewer and the report again later: `deltanav view outputs/my_lab`.
 
 ### 7. If something goes wrong
 
@@ -408,12 +428,14 @@ To open the viewer and the report again later: `deltanav view outputs/lab`.
 | `python3 -m venv` says `ensurepip is not available` | `sudo apt install python3-venv`, then run it again. |
 | `pip install` fails | `pip install -U pip` and try again. Check `python3 --version` is 3.10 to 3.13. |
 | `deltanav: command not found` | Activate the environment first: `cd deltanav && source .venv/bin/activate`. |
+| `no such file` | The path after `--before` or `--after` is wrong. Drag the video into the terminal to paste its exact path. |
+| `already holds the results for other videos` | Give these videos a new `--out` name, or add `--force` to replace the old results. |
 | `only N of M keyframes could be put in one 3D model` | The two videos do not show enough of the same room. Film both again, covering the whole room, from similar heights, with the same lens and in good light. |
 | `No changes found`, but you changed something | The object may be smaller than a shoebox, or the other video never looked at that spot. In the viewer, switch on **Could not be checked** to see what was not covered, and film those parts more. |
 | A move shows up as one removal and one addition | The detector gave the two versions different names. The positions and sizes are still right. |
 | Very slow | Check the GPU (step 2), or use `--quick`. |
 | Out of memory | Use `--quick` and close other programs. |
-| The browser does not open (server, WSL) | Open `outputs/lab/result/viewer.html` and `report.html` yourself; in WSL: `cd outputs/lab/result && explorer.exe .` |
+| The browser does not open (server, WSL) | Open `outputs/NAME/result/viewer.html` and `report.html` yourself; in WSL: `cd outputs/NAME/result && explorer.exe .` |
 | The first run fails while downloading a model | It needs internet access to huggingface.co and github.com once. |
 
 **What to expect in other places.** Nothing in the code is specific to my bedroom. The room frame, the floor,

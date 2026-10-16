@@ -62,12 +62,43 @@ def log(m):
     print(m, flush=True)
 
 
+def input_files(before: str, after: str) -> dict:
+    """What identifies the two videos of a run: file name and size."""
+    return {ep: [os.path.basename(p), os.path.getsize(p)] for ep, p in (('before', before), ('after', after))}
+
+
+def check_inputs(out: str, before: str, after: str, force: bool = False) -> dict:
+    """The two videos must exist and differ, and an --out folder that already holds a run on other videos is not
+    silently reused (its cached stages would belong to those videos). Returns input_files(); exits with a
+    message otherwise."""
+    for f, flag in ((before, '--before'), (after, '--after')):
+        if not os.path.isfile(f):
+            sys.exit(f'error: {flag} {f}: no such file. Give the path to the video file, e.g. ~/Videos/room_{flag[2:]}.mov')
+    if os.path.samefile(before, after):
+        sys.exit('error: --before and --after are the same file. Give the video filmed before the changes and the one '
+                 'filmed after')
+    cur = input_files(before, after)
+    p = os.path.join(out, 'run_info.json')
+    if not force and os.path.exists(p):
+        info = json.load(open(p))
+        prev = info.get('input_files')
+        if prev is None and info.get('inputs'):                  # a run from before input_files was recorded
+            prev = {ep: [os.path.basename(v), None] for ep, v in info['inputs'].items()}
+            cur_cmp = {ep: [v[0], None] for ep, v in cur.items()}
+        else:
+            cur_cmp = cur
+        if prev and prev != cur_cmp:
+            sys.exit(f"error: {out} already holds the results for other videos ({prev['before'][0]} -> "
+                     f"{prev['after'][0]}). Choose a new --out folder for these videos, or add --force to replace "
+                     'those results.')
+    return cur
+
+
 def run(a):
     from .keyframes import select_keyframes, hfov_from_metadata
-    out = os.path.abspath(a.out); os.makedirs(out, exist_ok=True)
-    for f in (a.before, a.after):
-        if not os.path.exists(f):
-            sys.exit(f'error: {f} does not exist')
+    out = os.path.abspath(a.out)
+    files = check_inputs(out, a.before, a.after, a.force)
+    os.makedirs(out, exist_ok=True)
     t0 = time.time()
     info_p = os.path.join(out, 'run_info.json')
     info = json.load(open(info_p)) if os.path.exists(info_p) and not a.force else {}
@@ -84,7 +115,7 @@ def run(a):
     def done(stage, t):
         info['seconds'][stage] = round(time.time() - t)
         info.update(version=__version__, python=sys.version.split()[0], platform=platform.platform(),
-                    inputs=dict(before=os.path.abspath(a.before), after=os.path.abspath(a.after)))
+                    inputs=dict(before=os.path.abspath(a.before), after=os.path.abspath(a.after)), input_files=files)
         json.dump(info, open(info_p, 'w'), indent=1)
         if a.stop_after == stage:
             log(f'stopped after {stage}'); sys.exit(0)
