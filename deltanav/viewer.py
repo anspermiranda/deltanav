@@ -102,7 +102,10 @@ def build_viewer(path, surfaces, changes, sentences, Z, floor_c, views, nav=None
                                routes_before=[rt['waypoints'] for rt in r['plans']['before'].values() if rt.get('reachable')],
                                routes_updated=[rt['waypoints'] for rt in r['plans']['updated'].values() if rt.get('reachable')],
                                goals=[dict(name=g, x=rt['goal'][0], y=rt['goal'][1], yaw=float(np.radians(rt['yaw_deg'])))
-                                      for g, rt in r['plans']['updated'].items() if rt.get('reachable')]))
+                                      for g, rt in r['plans']['updated'].items() if rt.get('reachable')],
+                               checks=[dict(name='check ' + ' '.join(g.split('_')[1:]), x=v['goal'][0], y=v['goal'][1],
+                                            yaw=float(np.radians(v['yaw_deg'])), waypoints=v.get('waypoints'))
+                                       for g, v in r.get('inspect_changes', {}).items() if v.get('reachable')]))
     nv = []
     for v in next_views or []:
         p = np.array(v['position'], float); p[2] += floor_z(p[None, :2], floor_c)[0]

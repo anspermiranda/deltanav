@@ -143,10 +143,12 @@ def make_outputs(out: str, navigation: bool = True, log=print, videos: bool = Tr
     img = viz.change_overlay(img, cam, changes, floor_c)
     images['3d_overview'] = os.path.join(img_dir, '3d_overview.jpg')
     cv2.imwrite(images['3d_overview'], cv2.cvtColor(img, cv2.COLOR_RGB2BGR), [cv2.IMWRITE_JPEG_QUALITY, 90])
+    epochs = {}
     for ep in ('before', 'after'):
         Ve, Fe, Ce = viz.ceiling_cut(*surf[ep], floor_c)
         Ne = viz.shading_normals(Ve, Fe, cams)
-        img, _ = viz.render_ss(Ve, Ce, Ne, cam, spacing=1.2 * viz.edge_len(Ve, Fe))
+        epochs[ep] = (Ve, Ce, Ne, 1.2 * viz.edge_len(Ve, Fe))
+        img, _ = viz.render_ss(Ve, Ce, Ne, cam, spacing=epochs[ep][3])
         img = viz.change_overlay(img, cam, changes, floor_c, which=(ep,))
         images[f'3d_{ep}'] = os.path.join(img_dir, f'3d_{ep}.jpg')
         cv2.imwrite(images[f'3d_{ep}'], cv2.cvtColor(img, cv2.COLOR_RGB2BGR), [cv2.IMWRITE_JPEG_QUALITY, 90])
@@ -176,7 +178,10 @@ def make_outputs(out: str, navigation: bool = True, log=print, videos: bool = Tr
         images[f"change_{c['id']}"] = pair_image(ann, c, s, p)
     if videos:
         annotated_videos(ann, os.path.join(res, 'video'), log=log)
-    lap('annotated frames and videos')
+        if len(V) and all(len(e[0]) for e in epochs.values()):
+            viz.orbit_video(os.path.join(res, 'video', '3d_model.mp4'), (V, C, N, sp), epochs, changes, floor_c, lo, hi,
+                            cam, log=log)
+    lap('annotated frames and videos, 3D model video')
 
     # viewers --------------------------------------------------------------------------------------------
     from .viewer import build_viewer

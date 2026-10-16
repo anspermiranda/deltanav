@@ -1,6 +1,6 @@
 # What changed in the room?
 
-`before_IMG_8815.MOV` → `after_IMG_8817.MOV` · 2026-10-15
+`before_IMG_8815.MOV` → `after_IMG_8817.MOV` · 2026-10-16
 
 **3 changes found**
 
@@ -17,6 +17,8 @@ Open `viewer.html` (the 3D viewer) in any browser, or run `deltanav view <out>`;
 | Before video only | After video only |
 |---|---|
 | ![before](images/3d_before.jpg) | ![after](images/3d_after.jpg) |
+
+Videos: [`video/3d_model.mp4`](video/3d_model.mp4) · [`video/before_annotated.mp4`](video/before_annotated.mp4) · [`video/after_annotated.mp4`](video/after_annotated.mp4)
 
 ## Changes
 

@@ -1,6 +1,7 @@
 """Pictures: 3D renders of the reconstructed room (no GPU or display needed), the floor plan, the robot's
 routes, the naive-diff comparison and the coverage chart. Everything is drawn in the room frame."""
 from __future__ import annotations
+import os
 import numpy as np
 import cv2
 import matplotlib
@@ -199,6 +200,61 @@ def best_dollhouse(V, C, N, changes, floor_c, lo, hi, obj_pts):
             best = (score, cam)
     cam = best[1]
     return Camera(cam.pos, cam.pos + cam.fwd, 1600, 1000, fov=55)
+
+
+def _caption(img, text, foot=''):
+    """A label at the top left (and an optional line at the bottom) of a video frame."""
+    from PIL import Image, ImageDraw
+    pil = Image.fromarray(img); d = ImageDraw.Draw(pil)
+    for txt, size, top in ((text, max(16, img.shape[1] // 45), True), (foot, max(12, img.shape[1] // 70), False)):
+        if not txt:
+            continue
+        f = font(size)
+        x, y = 14, 12
+        bb = d.textbbox((x, y), txt, font=f)
+        if not top:
+            y = img.shape[0] - (bb[3] - bb[1]) - 18
+            bb = d.textbbox((x, y), txt, font=f)
+        d.rounded_rectangle((bb[0] - 9, bb[1] - 7, bb[2] + 9, bb[3] + 7), radius=8, fill=(255, 255, 255), outline=(205, 205, 212))
+        d.text((x, y), txt, fill=(28, 28, 34), font=f)
+    return np.asarray(pil).copy()
+
+
+def orbit_video(path, shared, epochs, changes, floor_c, lo, hi, best_cam, W=960, H=600, n=60, fps=15, log=print):
+    """A short film of the 3D reconstruction: half an orbit around the shared model (both versions of each changed
+    object, boxes, arrows), then the before-only and after-only models alternating, seen from the corner that
+    shows the changes best. shared, epochs[ep]: (V, C, N, splat spacing). Rendered in software, no GPU needed."""
+    from .annotate import write_video
+    c = (np.asarray(lo[:2], float) + np.asarray(hi[:2], float)) / 2
+    span = np.asarray(hi[:2], float) - np.asarray(lo[:2], float)
+    a, b = np.sqrt(2) * 0.95 * span                      # the ellipse through the four dollhouse corners
+    rel = best_cam.pos[:2] - c
+    th0 = float(np.arctan2(rel[1] / b, rel[0] / a))
+    z, tgt = float(best_cam.pos[2]), np.r_[c, 0.35]
+    foot = ' · '.join(f"{x['id']} {x['type']}: {x['label']}" for x in changes) or 'no changes found'
+
+    def cam_at(th):
+        return Camera(np.r_[c + np.array([a * np.cos(th), b * np.sin(th)]), z], tgt, W, H, fov=55)
+
+    def frame(mesh, cam, which, text):
+        V, C, N, sp = mesh
+        img, _ = render_ss(V, C, N, cam, spacing=sp)
+        return _caption(change_overlay(img, cam, changes, floor_c, which=which), text, foot)
+
+    def frames():
+        for k in range(n):                                # th0 - 90 deg -> th0 + 90 deg, easing in and out
+            th = th0 + np.radians(90) * -np.cos(np.pi * k / (n - 1))
+            yield frame(shared, cam_at(th), ('before', 'after'), '3D model from both videos')
+        cam = cam_at(th0)
+        fb = frame(epochs['before'], cam, ('before',), 'BEFORE (first video)')
+        fa = frame(epochs['after'], cam, ('after',), 'AFTER (second video)')
+        for _ in range(4):
+            for f in (fb, fa):
+                for _ in range(int(fps * 0.8)):
+                    yield f
+    k = write_video(frames(), path, fps=fps, size=(W, H))
+    log(f'  video/{os.path.basename(path)}: {k} frames ({k / fps:.0f} s)')
+    return path
 
 
 def ceiling_cut(V, F, C, floor_c, h=1.95):

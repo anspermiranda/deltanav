@@ -141,6 +141,17 @@ def write_report(res, ledger, nav, images, info, inline=True, filename='report.h
     if images.get('3d_before') and images.get('3d_after'):
         h.append(f"<div class='grid2'><div><img src='{I('3d_before')}' alt='before'><p class='cap'>Before video only</p></div>"
                  f"<div><img src='{I('3d_after')}' alt='after'><p class='cap'>After video only</p></div></div>")
+    vids = [(f, cap) for f, cap in (
+        ('video/3d_model.mp4', 'The 3D reconstruction: half an orbit around the shared model with every change, then the '
+                               'before-only and after-only models alternating.'),
+        ('video/before_annotated.mp4', 'The before video, keyframe by keyframe, with the changed objects boxed.'),
+        ('video/after_annotated.mp4', 'The after video, keyframe by keyframe, with the changed objects boxed.'))
+        if os.path.exists(os.path.join(res, f))]
+    if vids:
+        h.append('<h2>Videos</h2>')
+        for f, cap in vids:
+            h.append(f"<video src='{f}' controls muted loop playsinline preload='metadata' style='width:100%;"
+                     f"border-radius:8px;background:#000'></video><p class='cap'>{cap} <a href='{f}'>{f}</a></p>")
     # changes
     h.append('<h2>Changes</h2>')
     h.append("<p class='small muted'>Positions are in the room frame: x and y along the walls, z up from the floor, "
@@ -252,6 +263,10 @@ def write_markdown(res, ledger, nav, images):
                'Open `viewer.html` (the 3D viewer) in any browser, or run `deltanav view <out>`; add `--rerun` for the Rerun window.', '']
         if R('3d_before') and R('3d_after'):
             md += ['| Before video only | After video only |', '|---|---|', f"| ![before]({R('3d_before')}) | ![after]({R('3d_after')}) |", '']
+    vids = [f for f in ('video/3d_model.mp4', 'video/before_annotated.mp4', 'video/after_annotated.mp4')
+            if os.path.exists(os.path.join(res, f))]
+    if vids:
+        md += ['Videos: ' + ' · '.join(f'[`{f}`]({f})' for f in vids), '']
     md += ['## Changes', '', 'Room frame: x and y along the walls, z up from the floor, metres; ± is 1 sigma.', '']
     for r in ch:
         md += [f"### {r['id']} · {r['type']} · {r['label']}", '', r['sentence'], '']

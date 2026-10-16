@@ -15,7 +15,7 @@ next.
 **[Open the 3D viewer](https://anspermiranda.github.io/deltanav/)** (in the browser, no install) ·
 **[Open the 3D window in Rerun](https://app.rerun.io/version/0.39.0/?url=https://anspermiranda.github.io/deltanav/scene.rrd)** ·
 **[Full report for my room](https://anspermiranda.github.io/deltanav/report.html)** ([markdown](examples/my_room/report.md)) ·
-[design note](DESIGN.md) · [run it on your videos](#run-it)
+[design note](DESIGN.md) · **[run it on your own room](#run-it-on-your-own-room)**
 
 ---
 
@@ -36,8 +36,8 @@ next.
   humanoid and for a compact robot, with the cause of every route change; 2D maps for ROS 2 / Nav2, named goal
   poses and a 3D occupancy grid are exported; and the planner proposes **where to look next**.
 - **To look at:** a 3D viewer that opens in any browser (Shared / Before / After / Blink, layers, a card per
-  change; it works offline), the same scene in a Rerun window with a timeline through both videos, annotated
-  videos and a report page, all written by every run.
+  change; it works offline), a video of the 3D model, the same scene in a Rerun window with a timeline through
+  both videos, annotated videos and a report page, all written by every run, for any room.
 
 ## Result on my bedroom
 
@@ -98,9 +98,10 @@ and opens the 3D viewer and the report at the end (`deltanav view outputs/my_roo
 | **`viewer.html`, the 3D viewer**: one file that opens in any browser, offline, or as a link on GitHub Pages. Rotate, pan and zoom with the mouse; switch between Shared, Before, After and Blink (before and after alternate, like a blink comparator); turn layers on and off (room surfaces, change boxes and arrows, could-not-be-checked, see-through evidence, furniture, robot map and routes per robot, where to look next, camera paths, axes); click a change card to fly to it. | ![viewer](docs/img/viewer_shared.png) |
 | **`scene.rrd`, the Rerun window** (`deltanav view outputs/my_room --rerun`, [Rerun](https://rerun.io)): the same scene for robotics tooling. Switch the shared model, the before-only and after-only surfaces, the changed objects, the evidence rays, the places that could not be checked, the robot maps, routes and 3D occupancy on and off (eye icons on the left). Scrub the timeline to walk through both videos, with the annotated frame in each camera. | |
 | **`report.html`**: one self-contained page with every change (sentence, numbers, evidence, before/after frames), the 3D renders, the floor plan, the robot section, where to look next, and what could not be checked. | ![report](docs/img/report.png) |
+| **`video/3d_model.mp4`**: a 10-second video of the 3D reconstruction, half an orbit around the shared model with every change boxed, then the before-only and after-only models alternating ([mine](https://anspermiranda.github.io/deltanav/video/3d_model.mp4)). | |
 | **`video/before_annotated.mp4`, `video/after_annotated.mp4`**: every keyframe of each walk-through with the changed objects boxed and labelled, including where something *will* appear or *was*, and "(hidden)" when something nearer is in the way. | ![frames](docs/img/annotated_frames.jpg) |
 | **`ledger.json`**: one record per change in the room frame (above), plus the furniture, what could not be checked and why, the rejected candidates, and the suggested next views. | |
-| **`maps/`**: 2D occupancy maps (before, updated, after) in ROS `map_server` format for each robot, named **goal poses** (`<robot>_goals.yaml`), the routes (`routes.json`), and a **3D occupancy grid** (`occupancy3d.npz`, free / occupied / unknown at 4.5 cm). | ![routes](examples/my_room/images/robot_routes.png) |
+| **`maps/`**: 2D occupancy maps (before, updated, after) in ROS `map_server` format for each robot, named **goal poses** (`<robot>_goals.yaml`), the routes (`routes.json`, including a route to go and check each change), and a **3D occupancy grid** (`occupancy3d.npz`, free / occupied / unknown at 4.5 cm). | ![routes](examples/my_room/images/robot_routes.png) |
 | **`meshes/*.ply`**: coloured surfaces (shared room, before, after, each changed object in each version). They open in MeshLab, Blender or CloudCompare. | |
 
 ## The idea: absence of evidence is not evidence of absence
@@ -281,67 +282,150 @@ whole chain, built for a robot that comes back to a room:
 Choices, alternatives, what did not work, and related work (Khronos, Panoptic Multi-TSDFs, 3DGS-CD, RIO, ...):
 **[DESIGN.md](DESIGN.md)**.
 
-## Run it
+## Run it on your own room
 
-Needs Python 3.10+ and about 6 GB of disk for the models and outputs. An NVIDIA GPU makes the depth, naming
-and surface stages much faster; it also runs on CPU.
+Everything shown above for my bedroom is produced for **any two videos you give it**: your room, a lab, an
+office. The 3D reconstruction, the detected changes with names and positions, the annotated videos, a video of
+the 3D model, the robot maps and routes, and the report. Nothing has to be configured for a new place.
+
+### 1. What you need
+
+| | |
+|---|---|
+| Computer | Linux, macOS or Windows. Tested on Ubuntu (Python 3.13, 2 CPU cores, 7 GB RAM, no GPU). On Windows, the safest route is WSL2 with Ubuntu (`wsl --install -d Ubuntu` in PowerShell), then the Linux steps below. |
+| Python | 3.10 to 3.13 (`python3 --version`). |
+| Disk | About 5 GB for the Python packages (mostly PyTorch), 0.5 GB for the models, about 1 GB per run. |
+| Memory | 8 GB is enough. |
+| GPU | Optional. An NVIDIA GPU makes the depth, naming and 3D-surface stages several times faster. Without one, everything runs on the CPU. |
+| Internet | On the first run only: the models download from Hugging Face and GitHub (about 500 MB). |
+| Phone | Any phone that records video. |
+
+You do **not** need to install COLMAP, ffmpeg, CUDA or anything else by hand: `pip` brings everything (OpenCV
+reads the videos, pycolmap builds the 3D reconstruction, imageio-ffmpeg writes the videos).
+
+### 2. Install (once)
+
+**Ubuntu / Debian** (other Linux: install `git`, `python3` and its `venv` module the same way):
 
 ```bash
-git clone https://github.com/anspermiranda/deltanav.git && cd deltanav
-python3 -m venv .venv && source .venv/bin/activate
+sudo apt update && sudo apt install -y git python3-venv python3-pip
+git clone https://github.com/anspermiranda/deltanav.git
+cd deltanav
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip
 pip install -e .
-
-# reproduce my room (downloads the two videos from the GitHub release, about 125 MB)
-deltanav demo
-
-# your own videos
-deltanav run --before before.mov --after after.mov --out outputs/my_room
-
-# reopen the 3D viewer and the report later (add --rerun for the Rerun window)
-deltanav view outputs/my_room
+deltanav --version                  # prints: DeltaNav 1.0.0
 ```
 
-- The lens's field of view is read from the video file when the phone wrote it (iPhones do). Otherwise pass
-  `--hfov`: about 95 for the iPhone 0.5× lens, about 70 for 1×. It only needs to be roughly right.
-- `--quick` gives a faster, rougher run (90 keyframes per video, the small depth model).
-- The models (Depth Anything V2 from Hugging Face, YOLO11 and YOLOE from Ultralytics) download on first use.
-- Every stage is cached in `--out`, so running the command again resumes, and `--force` recomputes
-  everything. `--no-viewer` skips opening the viewer and the report at the end (for servers).
-- The release videos are re-encoded to 1280 px to keep the download small, so `demo` can differ from the
-  numbers above by a few centimetres.
+**macOS:** install [Homebrew](https://brew.sh), then `brew install git python@3.12`, and run the same commands
+from `git clone` on, with `python3.12 -m venv .venv`.
 
-**Runtime.** About 90 minutes for my two 9-minute videos on a 2-core cloud CPU with no GPU (keyframes 9 min,
-reconstruction 17, depth 34, naming 23, change detection under 1, outputs 5). The depth, naming and 3D-surface
-stages run on an NVIDIA GPU when there is one, which takes them from tens of minutes to a few; the reconstruction
-runs on the CPU.
+**Optional checks:**
 
-**Recording tips.**
+```bash
+python -c "import torch; print('GPU' if torch.cuda.is_available() else 'CPU only')"
+deltanav demo          # reproduces my room: downloads the two example videos (about 130 MB) and runs on them
+```
 
-- Film the whole room twice per video, at chest height and then at waist height.
-- Walk slowly, and point at every wall and corner.
-- Use the same lens both times, and keep people out of the frame (the camera operator's own hands and feet
-  are detected and masked).
+If you have an NVIDIA GPU but it prints `CPU only`, your driver is older than the CUDA build pip chose. Install
+the CUDA 12.6 build instead: `pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126`.
 
-**Other rooms and other objects.** Nothing in the code is specific to my bedroom. The room frame, the floor,
+Every new terminal needs `cd deltanav && source .venv/bin/activate` before `deltanav` works.
+
+### 3. Film the two videos
+
+1. **Before video.** Walk slowly around the whole room and film every wall and corner: one lap with the phone
+   at chest height, then one at waist height. Two to five minutes is plenty.
+2. **Make your changes.** Move, add or take away a few things, each at least the size of a shoebox: a chair,
+   a bag, a box, a lamp, a plant, a suitcase, a bin.
+3. **After video.** Film the same way, with the **same phone and the same lens** (both 1×, or both 0.5×).
+
+Good to know:
+
+- Start both videos in a similar place (the door, for example) and cover the same room, so the two videos
+  overlap. That is how they are put into one 3D model.
+- Use normal room light, and move slowly. The person filming may appear in the shot (hands, feet); people and
+  pets are masked.
+- Mirrors, glass walls and very dark corners are hard for any depth model. Film the rest of the room normally.
+
+### 4. Copy the videos to the computer
+
+- **Format:** any video your phone records works as it is: `.mov` or `.mp4`, H.264 or HEVC (H.265),
+  including iPhone HDR. **No conversion.**
+- **Length:** no need to cut or split. DeltaNav picks about 180 sharp frames from each video, whatever its
+  length; a longer video only takes longer to scan.
+- **Resolution and orientation:** anything (4K is fine; frames are scaled to 1280 px). Landscape or portrait.
+- **Names and place:** any file names, in any folder. You give the two paths on the command line, so
+  nothing is renamed and nothing replaces the example.
+- **How to copy:** USB cable, AirDrop, Google Drive or similar, sending the **original** file. Avoid
+  messaging apps (WhatsApp and the like): they compress the video and remove the lens information.
+
+### 5. Run
+
+```bash
+cd deltanav && source .venv/bin/activate
+deltanav run --before ~/Videos/lab_before.mov --after ~/Videos/lab_after.mov --out outputs/lab
+```
+
+- `--out` is a new folder for this experiment. Use a new name for each one (`outputs/lab`,
+  `outputs/kitchen`, ...); results never overwrite each other or the example.
+- **Lens:** read from the file for iPhone videos. For other phones add `--hfov 70` for the normal lens or
+  `--hfov 100` for an ultra-wide one; it only needs to be roughly right.
+- `--quick` is faster and rougher (90 frames per video and the small depth model).
+- It prints its progress as `[1/6]` to `[6/6]`. If it is interrupted, run the same command again: finished
+  stages are kept and it carries on. `--force` starts again from scratch.
+- **How long:** my two 9-minute videos took about 90 minutes on a 2-core cloud CPU with no GPU (keyframes 9
+  minutes, 3D reconstruction 17, depth 34, naming 23, change detection under 1, outputs 5). An NVIDIA GPU
+  takes the depth, naming and 3D-surface stages from tens of minutes to a few. The 3D reconstruction always
+  runs on the CPU. Shorter videos are quicker. As a check of the whole path, a fresh install running
+  `deltanav demo --quick` on the same 2-core machine downloaded the example videos from this repository's
+  release and finished in 33 minutes, with the same three changes found.
+
+### 6. What you get
+
+When the run finishes, the **3D viewer** and the **report** open in your browser by themselves. Everything is
+in `outputs/lab/result/`:
+
+| File | What it is |
+|---|---|
+| `viewer.html` | **The 3D reconstruction of your room**, interactive: Shared / Before / After / Blink, the changes as boxes with arrows and cards, and the layer **Robot map + routes** (pick humanoid or compact) with the routes, goal poses and a route to go and check each change. |
+| `video/3d_model.mp4` | **A 10-second video of the 3D reconstruction**: half an orbit around the model with every change boxed, then before and after alternating. |
+| `video/before_annotated.mp4`, `video/after_annotated.mp4` | **Your two videos with the changes boxed and labelled**, keyframe by keyframe. |
+| `report.html` | Everything on one page: each change in words and numbers, before/after frames, the floor plan, the robot section. |
+| `images/` | Floor plan, robot routes, a before/after picture per change, 3D renders. |
+| `maps/` | Robot maps (ROS `map_server` `.pgm` + `.yaml`), goal poses (`*_goals.yaml`), routes (`routes.json`), 3D occupancy. |
+| `ledger.json` | Every change as data, in the room frame (positions in metres, rotation, size, evidence). |
+| `meshes/*.ply` | The 3D surfaces: open them in MeshLab, Blender or CloudCompare. |
+| `scene.rrd` | The same scene for the Rerun window: `deltanav view outputs/lab --rerun`. |
+
+To open the viewer and the report again later: `deltanav view outputs/lab`.
+
+### 7. If something goes wrong
+
+| What you see | What to do |
+|---|---|
+| `python3 -m venv` says `ensurepip is not available` | `sudo apt install python3-venv`, then run it again. |
+| `pip install` fails | `pip install -U pip` and try again. Check `python3 --version` is 3.10 to 3.13. |
+| `deltanav: command not found` | Activate the environment first: `cd deltanav && source .venv/bin/activate`. |
+| `only N of M keyframes could be put in one 3D model` | The two videos do not show enough of the same room. Film both again, covering the whole room, from similar heights, with the same lens and in good light. |
+| `No changes found`, but you changed something | The object may be smaller than a shoebox, or the other video never looked at that spot. In the viewer, switch on **Could not be checked** to see what was not covered, and film those parts more. |
+| A move shows up as one removal and one addition | The detector gave the two versions different names. The positions and sizes are still right. |
+| Very slow | Check the GPU (step 2), or use `--quick`. |
+| Out of memory | Use `--quick` and close other programs. |
+| The browser does not open (server, WSL) | Open `outputs/lab/result/viewer.html` and `report.html` yourself; in WSL: `cd outputs/lab/result && explorer.exe .` |
+| The first run fails while downloading a model | It needs internet access to huggingface.co and github.com once. |
+
+**What to expect in other places.** Nothing in the code is specific to my bedroom. The room frame, the floor,
 the metric scale and the lens come from the two videos, and the thresholds are physical (metres, frame
-counts), although they were set while developing on this one room. Names come
-from YOLO11 (the 80 COCO classes) and YOLOE's open vocabulary (about 4,600 names), so a moved lamp, an added
-box or a removed plant go through the same steps as the chair. The furniture used in sentences and as robot
-goals covers bedrooms, living rooms, offices, kitchens and bathrooms. With no furniture in reach, a place is
-described relative to the room: *in a corner of the room*, *along the wall*, *in the middle of the room*.
-What to expect elsewhere:
-
-- Both videos need to overlap enough to go into one 3D model. If they don't, the run stops with a clear
-  message instead of guessing.
-- Things smaller than about a shoebox, and changes that only rotate an object on the spot or recolour it,
-  are not reported (see Limitations).
-- A move is recognised when both versions get the same kind of name (chair and office chair count as the
-  same). If the detector names the two versions differently, the change shows up as one removal and one
-  addition, each still correct in place and size.
-- Glass, mirrors, very dark rooms and people walking through are the hard cases for monocular depth. People
-  and pets are masked.
-- So far it has been checked end to end on one real room (with the controls and stress tests in
-  [Does it hold up?](#does-it-hold-up)) and on synthetic tests. A different room is the next test.
+counts), although they were set while developing on this one room. Names come from YOLO11 (the 80 COCO
+classes) and YOLOE's open vocabulary (about 4,600 names), so a moved lamp, an added box or a removed plant go
+through the same steps as the chair. The furniture used in sentences and as robot goals covers bedrooms,
+living rooms, offices, kitchens and bathrooms. With no furniture in reach, a place is described relative to
+the room: *in a corner of the room*, *along the wall*, *in the middle of the room*. Things smaller than about
+a shoebox, and changes that only rotate an object on the spot or recolour it, are not reported (see
+[Limitations](#limitations)). So far it has been checked end to end on one real room (with the controls and
+stress tests in [Does it hold up?](#does-it-hold-up)) and on synthetic tests.
 
 ## Repository layout
 

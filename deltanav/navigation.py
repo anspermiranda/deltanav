@@ -510,7 +510,8 @@ def navigation(P, Hgt, views, changes, landmarks, out_dir, robots=ROBOTS, res=0.
         files = []
         for k, g in maps.items():
             files += export_ros(g, spec, os.path.join(out_dir, f'{robot.name}_map_{k}'))
-        # poses from which to inspect each change (go and look at the new backpack, at where the suitcase was)
+        # poses from which to inspect each change (go and look at the new backpack, at where the suitcase was), with
+        # the route there on the updated map: every room with a change gets a route, furniture or not
         pu = plans['updated']
         insp = {}
         if pu.get('start') is not None:
@@ -520,8 +521,13 @@ def navigation(P, Hgt, views, changes, landmarks, out_dir, robots=ROBOTS, res=0.
                 lm = dict(label=c['label'], footprint=o['footprint'])
                 cell, yaw = goal_for(lm, pu['trav'], pu['reach'], spec, robot, D)
                 if cell is not None:
-                    insp[f"check_{c['id']}_{c['label'].replace(' ', '_')}"] = dict(
-                        reachable=True, goal=spec.centre(*cell).tolist(), yaw_deg=round(yaw, 1))
+                    e = dict(reachable=True, goal=spec.centre(*cell).tolist(), yaw_deg=round(yaw, 1))
+                    path = astar(pu['trav'], pu['clear'], pu['start'], cell, spec.res, robot.radius)
+                    if path is not None:
+                        sp = smooth(path, pu['trav'])
+                        e.update(waypoints=spec.centre(*np.asarray(sp).T).round(3).tolist(),
+                                 length_m=round(path_length(sp, spec.res), 2))
+                    insp[f"check_{c['id']}_{c['label'].replace(' ', '_')}"] = e
         goals_path = os.path.join(out_dir, f'{robot.name}_goals.yaml')
         export_goals(dict(pu, routes={**pu['routes'], **insp}), robot, goals_path)
         files.append(goals_path)

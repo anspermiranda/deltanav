@@ -177,8 +177,9 @@ def run(a):
 
 def _browse(path: str) -> bool:
     import webbrowser
+    from pathlib import Path
     try:
-        return webbrowser.open('file://' + path)
+        return webbrowser.open(Path(path).resolve().as_uri())       # file:///... on Linux, macOS and Windows
     except Exception:
         return False
 

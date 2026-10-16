@@ -194,6 +194,12 @@ async function build() {
       grp('robot_' + r.name).add(ar);
       addLabel(g.name, [g.x, g.y, 0.08], 'furn', null, 'robot:' + r.name, ['shared', 'before', 'after']);
     }
+    for (const g of (r.checks || [])) {      // go and look at each change, on the updated map
+      if (g.waypoints && g.waypoints.length > 1) grp('robot_' + r.name).add(line(g.waypoints.map(p => [p[0], p[1], 0.05]), 0x8e44ad, true));
+      const ar = new THREE.ArrowHelper(new THREE.Vector3(Math.cos(g.yaw), Math.sin(g.yaw), 0), new THREE.Vector3(g.x, g.y, 0.06), 0.25, 0x8e44ad, 0.08, 0.06);
+      grp('robot_' + r.name).add(ar);
+      addLabel(g.name, [g.x, g.y, 0.1], 'furn', null, 'robot:' + r.name, ['shared', 'before', 'after']);
+    }
     if (r.start) { const s = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffc800 })); s.position.set(r.start[0], r.start[1], 0.06); grp('robot_' + r.name).add(s); }
   }
   for (const [k, v] of D.next_views.entries()) {
