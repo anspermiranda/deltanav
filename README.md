@@ -11,7 +11,9 @@ second video never really looked, it says _could not be checked_ instead of gues
 next.
 
 ![The 3D viewer for my room: the shared model with both versions of each changed object, then before and after blinking](docs/img/hero.gif)
-click below to open the 3D viewer and change report of my room: 
+
+Click below to open the 3D viewer and change report of my room: 
+
 **[Open the 3D viewer](https://anspermiranda.github.io/deltanav/)** (in the browser, no install) ·
 **[Open the 3D window in Rerun](https://app.rerun.io/version/0.39.0/?url=https://anspermiranda.github.io/deltanav/scene.rrd)** ·
 **[Full report for my room](https://anspermiranda.github.io/deltanav/report.html)** ([markdown](examples/my_room/report.md)) ·
