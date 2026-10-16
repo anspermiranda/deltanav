@@ -19,7 +19,7 @@ next.
 
 ---
 
-## In 30 seconds
+##
 
 - **Input:** two ordinary phone videos. No depth sensor, no markers, different walking paths.
 - **Shared 3D:** both videos go into *one* reconstruction, so they share a coordinate frame from the start.
